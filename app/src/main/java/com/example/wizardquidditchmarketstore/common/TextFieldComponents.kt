@@ -43,14 +43,14 @@ fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier =
         modifier = modifier,
         value = value,
         onValueChange = { onNewValue(it) },
-        placeholder = { Text("EMAIL") },
+        placeholder = { Text(stringResource(AppText.email_placeholder)) },
         leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") }
     )
 }
 
 @Composable
 fun PasswordField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier) {
-    PasswordField(value, AppText.app_name, onNewValue, modifier)
+    PasswordField(value, AppText.password_placeholder, onNewValue, modifier)
 }
 
 @Composable
@@ -59,7 +59,7 @@ fun RepeatPasswordField(
     onNewValue: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    PasswordField(value, AppText.app_name, onNewValue, modifier)
+    PasswordField(value, AppText.repeat_password_placeholder, onNewValue, modifier)
 }
 
 @Composable

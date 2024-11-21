@@ -5,6 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.wizardquidditchmarketstore.models.SignUpUiState
 import com.example.wizardquidditchmarketstore.models.services.AccountService
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
 class SignUpViewModel @Inject constructor(
@@ -30,16 +34,8 @@ class SignUpViewModel @Inject constructor(
         uiState.value = uiState.value.copy(repeatPassword = newValue)
     }
 
-    fun onSignUpClick() {
-        accountService.linkAccount(
-            uiState.value.email,
-            uiState.value.password,
-        ) { error ->
-            if (error == null) {
-                Log.d("TAG", "success")
-            } else {
-                Log.d("TAG", "error")
-            }
-        }
+    fun onSignUpClick(onResult: (Throwable?) -> Unit) {
+        Firebase.auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { onResult(it.exception) }
     }
 }

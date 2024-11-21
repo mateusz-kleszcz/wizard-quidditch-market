@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WizardQuidditchMarketstore</string>
+    <string name="email_placeholder">Email</string>
+    <string name="password_placeholder">Password</string>
+    <string name="repeat_password_placeholder">Repeat password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
 </resources>

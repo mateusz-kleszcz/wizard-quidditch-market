@@ -19,7 +19,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
-    private lateinit var auth: FirebaseAuth
     private val accountService: AccountService = AccountServiceImpl()
     private val signUpViewModel = SignUpViewModel(accountService)
 
@@ -29,16 +28,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        auth = Firebase.auth
-
         setContent {
             WizardQuidditchMarketstoreTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
                     NavGraph(
                         navController = navController,
+                        loginViewModel=loginViewModel,
                         signUpViewModel=signUpViewModel,
-                        auth=auth
                     )
                 }
             }
