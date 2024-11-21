@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "632534576270",
+    "firebase_url": "https://quidditchmarketstore-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "quidditchmarketstore",
+    "storage_bucket": "quidditchmarketstore.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632534576270:android:5bc6bac08fced650b32ddf",
+        "android_client_info": {
+          "package_name": "com.example.wizardquidditchmarketstore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "632534576270-9e2pf2qkj3cni5g8o24t2i33l3luvdc2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-giSOKrkm5e13tOt0HVW1tIKeiOWj5U0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "632534576270-9e2pf2qkj3cni5g8o24t2i33l3luvdc2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
