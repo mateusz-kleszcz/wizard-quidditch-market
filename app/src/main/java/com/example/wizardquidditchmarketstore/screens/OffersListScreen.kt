@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.request.ImageRequest
 import com.example.wizardquidditchmarketstore.R
+import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
 import com.example.wizardquidditchmarketstore.models.offers.Offer
 import com.example.wizardquidditchmarketstore.navigation.Screens
 
@@ -35,19 +36,23 @@ fun OffersListScreen(
     offersList: List<Offer?>,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(stringResource(R.string.offers_list))
-        offersList.forEach { offer ->
-            OfferItem(offer, navController)
-        }
-        Button(onClick={ navController.navigate(Screens.AddOffer.route) }) {
-            Text(stringResource(R.string.add_offer))
+    Scaffold(
+        topBar = { WizardNavigationBar(navController) }
+    ) { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(stringResource(R.string.offers_list))
+            offersList.forEach { offer ->
+                OfferItem(offer, navController)
+            }
+            Button(onClick={ navController.navigate(Screens.AddOffer.route) }) {
+                Text(stringResource(R.string.add_offer))
+            }
         }
     }
 }

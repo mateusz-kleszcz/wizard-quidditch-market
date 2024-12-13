@@ -6,9 +6,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
 import com.example.wizardquidditchmarketstore.screens.AddOfferScreen
+import com.example.wizardquidditchmarketstore.screens.FavouritesScreen
 import com.example.wizardquidditchmarketstore.screens.LoginScreen
 import com.example.wizardquidditchmarketstore.screens.OfferDetailsScreen
 import com.example.wizardquidditchmarketstore.screens.OffersListScreen
+import com.example.wizardquidditchmarketstore.screens.ProfileScreen
 import com.example.wizardquidditchmarketstore.screens.SignUpScreen
 import com.example.wizardquidditchmarketstore.viewModels.AddOffersViewModel
 import com.example.wizardquidditchmarketstore.viewModels.LoginViewModel
@@ -57,6 +59,16 @@ fun NavGraph (
                 navController = navController,
                 viewModel = addOffersViewModel,
                 onCreateOffer = firebaseViewModel::saveOffer,
+            )
+        }
+        composable(route = Screens.Favourites.route){
+            FavouritesScreen(
+                navController = navController,
+            )
+        }
+        composable(route = Screens.Profile.route){
+            ProfileScreen(
+                navController = navController,
             )
         }
     }
