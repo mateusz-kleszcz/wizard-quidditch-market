@@ -1,12 +1,9 @@
 package com.example.wizardquidditchmarketstore.viewModels
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.wizardquidditchmarketstore.models.SignUpUiState
 import com.example.wizardquidditchmarketstore.models.services.AccountService
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import javax.inject.Inject

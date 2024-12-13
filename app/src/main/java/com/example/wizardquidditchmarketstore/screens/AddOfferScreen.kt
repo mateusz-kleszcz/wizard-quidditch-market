@@ -14,7 +14,7 @@ import androidx.navigation.NavController
 import com.example.wizardquidditchmarketstore.common.BasicField
 import com.example.wizardquidditchmarketstore.common.NumberField
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
-import com.example.wizardquidditchmarketstore.models.offers.OfferDetails
+import com.example.wizardquidditchmarketstore.models.offers.OfferDetailsSave
 import com.example.wizardquidditchmarketstore.viewModels.AddOffersViewModel
 
 import com.example.wizardquidditchmarketstore.R.string as AppText
@@ -24,7 +24,7 @@ fun AddOfferScreen(
     navController: NavController,
     viewModel: AddOffersViewModel,
     modifier: Modifier = Modifier,
-    onCreateOffer: (offer: OfferDetails) -> Unit
+    onCreateOffer: (offer: OfferDetailsSave) -> Unit
 ) {
     val uiState by viewModel.uiState
 
@@ -45,11 +45,11 @@ fun AddOfferScreen(
             BasicField(uiState.description, viewModel::onDescriptionChange, "Description")
             Button(onClick = {
                 onCreateOffer(
-                    OfferDetails(
+                    OfferDetailsSave(
                         uiState.name,
                         uiState.imgSrc,
                         uiState.price,
-                        uiState.description
+                        uiState.description,
                     )
                 )
             }) {

@@ -44,7 +44,7 @@ fun NavGraph (
         composable(route = Screens.OffersList.route){
             OffersListScreen(
                 navController = navController,
-                offersList = firebaseViewModel.offersList
+                firebaseViewModel = firebaseViewModel,
             )
         }
         composable(route = Screens.OfferDetails.route +  "?id={id}") { navBackStack ->
@@ -70,6 +70,7 @@ fun NavGraph (
         composable(route = Screens.Profile.route){
             ProfileScreen(
                 navController = navController,
+                firebaseViewModel = firebaseViewModel,
             )
         }
         composable(route = Screens.Owl.route){

@@ -33,7 +33,7 @@ fun BasicField(
         modifier = modifier,
         value = value,
         onValueChange = { onNewValue(it) },
-        placeholder = { Text(placeholder) }
+        label = { Text(placeholder) }
     )
 }
 
@@ -65,7 +65,7 @@ fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier =
         modifier = modifier,
         value = value,
         onValueChange = { onNewValue(it) },
-        placeholder = { Text(stringResource(AppText.email_placeholder)) },
+        label = { Text(stringResource(AppText.email_placeholder)) },
         leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") }
     )
 }

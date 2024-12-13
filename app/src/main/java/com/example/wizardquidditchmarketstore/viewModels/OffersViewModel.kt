@@ -2,10 +2,10 @@ package com.example.wizardquidditchmarketstore.viewModels
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.wizardquidditchmarketstore.models.offers.OfferDetails
+import com.example.wizardquidditchmarketstore.models.offers.OfferDetailsSave
 
 class AddOffersViewModel() : ViewModel() {
-    var uiState = mutableStateOf(OfferDetails("", "", 0, ""))
+    var uiState = mutableStateOf(OfferDetailsSave("", "", 0, ""))
         private set
 
     private val name
