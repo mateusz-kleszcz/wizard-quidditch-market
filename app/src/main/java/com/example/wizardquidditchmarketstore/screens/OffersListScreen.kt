@@ -20,9 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.request.ImageRequest
 import com.example.wizardquidditchmarketstore.R
@@ -40,18 +43,15 @@ fun OffersListScreen(
         topBar = { WizardNavigationBar(navController) }
     ) { innerPadding ->
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(top = 120.dp)
         ) {
-            Text(stringResource(R.string.offers_list))
             offersList.forEach { offer ->
                 OfferItem(offer, navController)
-            }
-            Button(onClick={ navController.navigate(Screens.AddOffer.route) }) {
-                Text(stringResource(R.string.add_offer))
             }
         }
     }
@@ -70,7 +70,7 @@ fun OfferItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp, 8.dp)
-            .border(border = BorderStroke(width = 1.dp, Color.LightGray))
+            .border(border = BorderStroke(width = 2.dp, Color.LightGray))
             .clickable(onClick = {
                 navController.navigate(
                     Screens.OfferDetails.route
@@ -87,6 +87,7 @@ fun OfferItem(
                 .crossfade(true)
                 .build(),
             contentDescription = "A photo",
+            contentScale = ContentScale.Crop,
             modifier = modifier.size(100.dp)
         )
         Column(
@@ -95,15 +96,17 @@ fun OfferItem(
         ) {
             Text(
                 offer.name,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(16.dp, 8.dp),
             )
             Text(
-                offer.price.toString(),
+                stringResource(R.string.price_label) + offer.price.toString(),
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(16.dp, 8.dp),
+                    .padding(16.dp, 0.dp),
             )
         }
     }

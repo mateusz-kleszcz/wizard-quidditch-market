@@ -10,6 +10,7 @@ import com.example.wizardquidditchmarketstore.screens.FavouritesScreen
 import com.example.wizardquidditchmarketstore.screens.LoginScreen
 import com.example.wizardquidditchmarketstore.screens.OfferDetailsScreen
 import com.example.wizardquidditchmarketstore.screens.OffersListScreen
+import com.example.wizardquidditchmarketstore.screens.OwlScreen
 import com.example.wizardquidditchmarketstore.screens.ProfileScreen
 import com.example.wizardquidditchmarketstore.screens.SignUpScreen
 import com.example.wizardquidditchmarketstore.viewModels.AddOffersViewModel
@@ -26,7 +27,7 @@ fun NavGraph (
 ){
     NavHost(
         navController = navController,
-        startDestination = Screens.AddOffer.route)
+        startDestination = Screens.OffersList.route)
     {
         composable(route = Screens.SignIn.route){
             LoginScreen(
@@ -68,6 +69,11 @@ fun NavGraph (
         }
         composable(route = Screens.Profile.route){
             ProfileScreen(
+                navController = navController,
+            )
+        }
+        composable(route = Screens.Owl.route){
+            OwlScreen(
                 navController = navController,
             )
         }

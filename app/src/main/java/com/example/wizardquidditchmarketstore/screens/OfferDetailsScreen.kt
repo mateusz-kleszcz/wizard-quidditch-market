@@ -2,17 +2,38 @@ package com.example.wizardquidditchmarketstore.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.wizardquidditchmarketstore.R
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
 import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
+import com.example.wizardquidditchmarketstore.navigation.Screens
 
 @Composable
 fun OfferDetailsScreen(
@@ -28,14 +49,61 @@ fun OfferDetailsScreen(
         topBar = { WizardNavigationBar(navController) }
     ) { innerPadding ->
         Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .verticalScroll(rememberScrollState())
+                .padding(top = 132.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            Text(offerDetails.name)
-            Text(offerDetails.description)
+            Row(
+                modifier = modifier
+                    .fillMaxSize()
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(offerDetails.imgSrc)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = offerDetails.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = modifier
+                        .size(200.dp)
+                        .padding(end = 16.dp)
+                )
+                Column() {
+                    Text(
+                        offerDetails.name,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(stringResource(R.string.price_label) + offerDetails.price.toString())
+                    IconButton(
+                        onClick = {},
+                    ) {
+                        Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Favourites")
+                    }
+                }
+            }
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = modifier
+                    .padding(vertical = 24.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    stringResource(R.string.description),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(offerDetails.description)
+            }
+            Button(
+                onClick = { navController.navigate(Screens.Owl.route) }
+            ) {
+                Text(stringResource(R.string.order_owl))
+            }
         }
     }
 }

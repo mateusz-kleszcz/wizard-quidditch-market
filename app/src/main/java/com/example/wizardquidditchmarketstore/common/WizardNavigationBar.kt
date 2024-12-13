@@ -1,5 +1,7 @@
 package com.example.wizardquidditchmarketstore.common
 
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Favorite
@@ -10,15 +12,18 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.wizardquidditchmarketstore.navigation.Screens
 import com.example.wizardquidditchmarketstore.R
 
 @Composable
 fun WizardNavigationBar(
-    navController: NavController
+    navController: NavController,
+    modifier: Modifier = Modifier
 ) {
     val currentRoute = navController.currentBackStackEntry?.destination?.route
     val colors = NavigationBarItemDefaults.colors(
@@ -27,7 +32,9 @@ fun WizardNavigationBar(
         indicatorColor = Color.Transparent
     )
     NavigationBar(
-        containerColor = Color(0xff262d3a)
+        containerColor = Color(0xff262d3a),
+        modifier = modifier
+            .height(120.dp),
     ) {
         NavigationBarItem(
             icon = { Icon(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "Offers List") },
@@ -40,6 +47,7 @@ fun WizardNavigationBar(
                 }
             },
             colors = colors,
+            modifier = modifier.padding(top = 20.dp)
         )
         NavigationBarItem(
             icon = { Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favorite") },
@@ -52,6 +60,7 @@ fun WizardNavigationBar(
                 }
             },
             colors = colors,
+            modifier = modifier.padding(top = 20.dp)
         )
         NavigationBarItem(
             icon = { Icon(imageVector = Icons.Default.Person, contentDescription = "Profile") },
@@ -64,6 +73,7 @@ fun WizardNavigationBar(
                 }
             },
             colors = colors,
+            modifier = modifier.padding(top = 20.dp)
         )
     }
 }
