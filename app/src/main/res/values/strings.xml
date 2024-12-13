@@ -5,4 +5,6 @@
     <string name="repeat_password_placeholder">Repeat password</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
+    <string name="offers_list">Offers List</string>
+    <string name="add_offer">Add offer</string>
 </resources>

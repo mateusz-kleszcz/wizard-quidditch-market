@@ -10,6 +10,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -22,9 +23,9 @@ import com.example.wizardquidditchmarketstore.R.string as AppText
 
 @Composable
 fun BasicField(
-    @StringRes text: Int,
     value: String,
     onNewValue: (String) -> Unit,
+    placeholder: String,
     modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
@@ -32,7 +33,28 @@ fun BasicField(
         modifier = modifier,
         value = value,
         onValueChange = { onNewValue(it) },
-        placeholder = { Text("TEXT") }
+        placeholder = { Text(placeholder) }
+    )
+}
+
+@Composable
+fun NumberField(
+    value: Int,
+    onNewValue: (Int) -> Unit,
+    placeholder: String,
+    modifier: Modifier = Modifier
+) {
+    var valueString by rememberSaveable { mutableStateOf(value.toString()) }
+
+    OutlinedTextField(
+        modifier = modifier,
+        value = valueString,
+        onValueChange = {
+            valueString = it
+            onNewValue(it.toIntOrNull() ?: 0)
+                        },
+        label = { Text(placeholder) },
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
     )
 }
 

@@ -7,22 +7,25 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
 import com.example.wizardquidditchmarketstore.models.services.AccountService
 import com.example.wizardquidditchmarketstore.models.services.AccountServiceImpl
 import com.example.wizardquidditchmarketstore.navigation.NavGraph
 import com.example.wizardquidditchmarketstore.ui.theme.WizardQuidditchMarketstoreTheme
+import com.example.wizardquidditchmarketstore.viewModels.AddOffersViewModel
 import com.example.wizardquidditchmarketstore.viewModels.LoginViewModel
 import com.example.wizardquidditchmarketstore.viewModels.SignUpViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     private val accountService: AccountService = AccountServiceImpl()
     private val signUpViewModel = SignUpViewModel(accountService)
 
     private val loginViewModel = LoginViewModel()
+    private val addOffersViewModel = AddOffersViewModel()
+
+    private val firebaseViewModel = FirebaseViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +39,8 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         loginViewModel=loginViewModel,
                         signUpViewModel=signUpViewModel,
+                        addOffersViewModel=addOffersViewModel,
+                        firebaseViewModel=firebaseViewModel,
                     )
                 }
             }
