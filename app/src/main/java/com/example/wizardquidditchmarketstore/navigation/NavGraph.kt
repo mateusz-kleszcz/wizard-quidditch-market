@@ -65,6 +65,7 @@ fun NavGraph (
         composable(route = Screens.Favourites.route){
             FavouritesScreen(
                 navController = navController,
+                firebaseViewModel = firebaseViewModel,
             )
         }
         composable(route = Screens.Profile.route){

@@ -20,4 +20,5 @@ data class OfferDetails(
     val price: Int,
     val description: String,
     val userId: String,
+    var isUserFavourite: Boolean,
 )

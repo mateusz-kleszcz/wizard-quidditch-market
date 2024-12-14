@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Button
@@ -79,10 +80,18 @@ fun OfferDetailsScreen(
                         fontWeight = FontWeight.Bold
                     )
                     Text(stringResource(R.string.price_label) + offerDetails.price.toString())
-                    IconButton(
-                        onClick = {},
-                    ) {
-                        Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Favourites")
+                    if (offerDetails.isUserFavourite) {
+                        IconButton(
+                            onClick = { firebaseViewModel.removeFromFavourites(offerId) },
+                        ) {
+                            Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favourites")
+                        }
+                    } else {
+                        IconButton(
+                            onClick = { firebaseViewModel.addToFavourites(offerId) },
+                        ) {
+                            Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Favourites")
+                        }
                     }
                 }
             }

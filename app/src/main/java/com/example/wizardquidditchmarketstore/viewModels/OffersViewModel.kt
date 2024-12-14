@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.wizardquidditchmarketstore.models.offers.OfferDetailsSave
 
-class AddOffersViewModel() : ViewModel() {
+class AddOffersViewModel : ViewModel() {
     var uiState = mutableStateOf(OfferDetailsSave("", "", 0, ""))
         private set
 
