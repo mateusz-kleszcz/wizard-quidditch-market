@@ -44,7 +44,7 @@ fun OfferDetailsScreen(
     modifier: Modifier = Modifier
 ) {
     firebaseViewModel.fetchOfferDetails(offerId)
-    var offerDetails = firebaseViewModel.offerDetails ?: return
+    val offerDetails = firebaseViewModel.offerDetails ?: return
 
     Scaffold(
         topBar = { WizardNavigationBar(navController) }
@@ -108,34 +108,11 @@ fun OfferDetailsScreen(
                 )
                 Text(offerDetails.description)
             }
-            var current_user = firebaseViewModel.get_auth()
-            if (offerDetails.userId == current_user.currentUser?.uid.toString()){
-                Button(
-                    onClick = { }
-                ) {
-                    Text("Sell item")
-                }
-                if(offerDetails.isSold == true){
-                    Button(
-                        onClick = { }
-                    ) {
-                        Text("Send Owl")
-                    }
-                }
-            }else{
-                Button(
-                    onClick = { navController.navigate(
-                        Screens.MRoom.route.replace(
-                                oldValue = "{id}",
-                                newValue = offerDetails.name
-                            )
-                    )}
-                ) {
-                    Text("Send message")
-                }
+            Button(
+                onClick = { navController.navigate(Screens.Owl.route) }
+            ) {
+                Text(stringResource(R.string.order_owl))
             }
-
-
         }
     }
 }

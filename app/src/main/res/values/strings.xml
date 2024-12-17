@@ -10,6 +10,6 @@
     <string name="favourites">Favourites</string>
     <string name="profile">Profile</string>
     <string name="description">Description</string>
-    <string name="messages">Messages</string>
+    <string name="order_owl">Order through owl</string>
     <string name="price_label">Price: </string>
 </resources>

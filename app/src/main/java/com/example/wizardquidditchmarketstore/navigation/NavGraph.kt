@@ -8,10 +8,9 @@ import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
 import com.example.wizardquidditchmarketstore.screens.AddOfferScreen
 import com.example.wizardquidditchmarketstore.screens.FavouritesScreen
 import com.example.wizardquidditchmarketstore.screens.LoginScreen
-import com.example.wizardquidditchmarketstore.screens.MessageRoom
-import com.example.wizardquidditchmarketstore.screens.MessagesScreen
 import com.example.wizardquidditchmarketstore.screens.OfferDetailsScreen
 import com.example.wizardquidditchmarketstore.screens.OffersListScreen
+import com.example.wizardquidditchmarketstore.screens.OwlScreen
 import com.example.wizardquidditchmarketstore.screens.ProfileScreen
 import com.example.wizardquidditchmarketstore.screens.SignUpScreen
 import com.example.wizardquidditchmarketstore.viewModels.AddOffersViewModel
@@ -31,13 +30,6 @@ fun NavGraph (
         navController = navController,
         startDestination = Screens.OffersList.route)
     {
-        composable(route = Screens.MRoom.route +  "?id={id}") { navBackStack ->
-            val id: String = navBackStack.arguments?.getString("id") ?: ""
-            MessageRoom(
-                navController = navController,
-                userName = id
-            )
-        }
         composable(route = Screens.SignIn.route){
             LoginScreen(
                 navController = navController,
@@ -84,8 +76,8 @@ fun NavGraph (
                 firebaseViewModel = firebaseViewModel,
             )
         }
-        composable(route = Screens.Messages.route){
-            MessagesScreen(
+        composable(route = Screens.Owl.route){
+            OwlScreen(
                 navController = navController,
             )
         }
