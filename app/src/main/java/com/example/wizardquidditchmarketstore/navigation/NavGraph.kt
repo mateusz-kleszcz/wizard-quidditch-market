@@ -17,6 +17,7 @@ import com.example.wizardquidditchmarketstore.screens.SignUpScreen
 import com.example.wizardquidditchmarketstore.viewModels.AddOffersViewModel
 import com.example.wizardquidditchmarketstore.viewModels.LoginViewModel
 import com.example.wizardquidditchmarketstore.viewModels.SignUpViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
 
 @Composable
 fun NavGraph (
@@ -25,7 +26,7 @@ fun NavGraph (
     signUpViewModel: SignUpViewModel,
     addOffersViewModel: AddOffersViewModel,
     firebaseViewModel: FirebaseViewModel,
-    getLastLocation: () -> Unit,
+    fusedLocationClient: FusedLocationProviderClient,
 ){
     NavHost(
         navController = navController,
@@ -69,7 +70,7 @@ fun NavGraph (
                 navController = navController,
                 viewModel = addOffersViewModel,
                 onCreateOffer = firebaseViewModel::saveOffer,
-                getLastLocation = getLastLocation,
+                fusedLocationClient = fusedLocationClient,
             )
         }
         composable(route = Screens.Favourites.route){

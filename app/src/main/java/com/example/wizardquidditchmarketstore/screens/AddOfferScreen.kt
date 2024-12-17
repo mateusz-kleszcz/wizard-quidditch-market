@@ -1,5 +1,8 @@
 package com.example.wizardquidditchmarketstore.screens
 
+import android.annotation.SuppressLint
+import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,18 +19,32 @@ import com.example.wizardquidditchmarketstore.common.NumberField
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
 import com.example.wizardquidditchmarketstore.models.offers.OfferDetailsSave
 import com.example.wizardquidditchmarketstore.viewModels.AddOffersViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import java.time.LocalDate
 
 import com.example.wizardquidditchmarketstore.R.string as AppText
 
+@SuppressLint("MissingPermission")
 @Composable
 fun AddOfferScreen(
     navController: NavController,
     viewModel: AddOffersViewModel,
     modifier: Modifier = Modifier,
     onCreateOffer: (offer: OfferDetailsSave) -> Unit,
-    getLastLocation: () -> Unit,
+    fusedLocationClient: FusedLocationProviderClient,
 ) {
     val uiState by viewModel.uiState
+    var latitude by remember { mutableDoubleStateOf(0.0) }
+    var longitude by remember { mutableDoubleStateOf(0.0) }
+
+    fusedLocationClient.lastLocation
+        .addOnSuccessListener { location: Location? ->
+            latitude = location?.latitude ?: 0.0
+            longitude = location?.longitude ?: 0.0
+        }
 
     Scaffold(
         topBar = { WizardNavigationBar(navController) }
@@ -45,13 +62,17 @@ fun AddOfferScreen(
             NumberField(uiState.price, viewModel::onPriceChange, "Price")
             BasicField(uiState.description, viewModel::onDescriptionChange, "Description")
             Button(onClick = {
-                getLastLocation()
+                val currentMoment = Clock.System.now()
+                val currentDate = currentMoment.toLocalDateTime(TimeZone.currentSystemDefault()).date
                 onCreateOffer(
                     OfferDetailsSave(
                         uiState.name,
                         uiState.imgSrc,
                         uiState.price,
                         uiState.description,
+                        longitude,
+                        latitude,
+                        currentDate.toString(),
                     )
                 )
             }) {
