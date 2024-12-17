@@ -110,10 +110,31 @@ fun OfferDetailsScreen(
                 )
                 Text(offerDetails.description)
             }
-            Button(
-                onClick = { navController.navigate(Screens.Owl.route) }
-            ) {
-                Text(stringResource(R.string.order_owl))
+            val currentUser = firebaseViewModel.get_auth()
+            if (offerDetails.userId == currentUser.currentUser?.uid.toString()){
+                Button(
+                    onClick = { }
+                ) {
+                    Text("Sell item")
+                }
+                if(offerDetails.isSold){
+                    Button(
+                        onClick = { }
+                    ) {
+                        Text("Send Owl")
+                    }
+                }
+            } else {
+                Button(
+                    onClick = { navController.navigate(
+                        Screens.MRoom.route.replace(
+                            oldValue = "{id}",
+                            newValue = offerDetails.name
+                        )
+                    )}
+                ) {
+                    Text("Send message")
+                }
             }
             GoogleMapFeature(offerDetails.latitude, offerDetails.longitude)
         }

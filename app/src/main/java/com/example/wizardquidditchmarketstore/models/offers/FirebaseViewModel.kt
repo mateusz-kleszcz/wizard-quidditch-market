@@ -1,14 +1,12 @@
 package com.example.wizardquidditchmarketstore.models.offers
 
-import android.annotation.SuppressLint
-import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
@@ -189,6 +187,7 @@ class FirebaseViewModel(): ViewModel() {
                 val longitude = snapshot.child("longitude").getValue<Double>() ?: 0.0
                 val date = snapshot.child("date").getValue<String>() ?: ""
                 val userId = snapshot.child("userId").getValue<String>() ?: ""
+                val isSold = snapshot.child("isSold").getValue<Boolean>() ?: false
                 var isUserFavourite = false
                 val favouritesSnapshot = usersRef
                     .child(auth.currentUser?.uid.toString())
@@ -211,6 +210,7 @@ class FirebaseViewModel(): ViewModel() {
                     longitude,
                     latitude,
                     date,
+                    isSold,
                 )
             } catch (e: Exception) {
                 Log.d("ERROR", e.toString())
@@ -233,6 +233,7 @@ class FirebaseViewModel(): ViewModel() {
                     date = offerSave.date,
                     userId = auth.currentUser?.uid.toString(),
                     isUserFavourite = false,
+                    isSold = false,
                 )
                 newItemRef.setValue(offerDetails).await()
                 fetchAllOffers()
@@ -240,5 +241,9 @@ class FirebaseViewModel(): ViewModel() {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun get_auth(): FirebaseAuth {
+        return auth
     }
 }

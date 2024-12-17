@@ -27,4 +27,5 @@ data class OfferDetails(
     val longitude: Double,
     val latitude: Double,
     val date: String,
+    val isSold: Boolean,
 )
