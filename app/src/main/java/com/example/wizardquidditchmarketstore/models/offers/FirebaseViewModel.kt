@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
@@ -229,5 +230,9 @@ class FirebaseViewModel: ViewModel() {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun get_auth(): FirebaseAuth {
+        return auth
     }
 }

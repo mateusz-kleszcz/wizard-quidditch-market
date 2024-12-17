@@ -108,10 +108,19 @@ fun OfferDetailsScreen(
                 )
                 Text(offerDetails.description)
             }
-            Button(
-                onClick = { navController.navigate(Screens.Owl.route) }
-            ) {
-                Text(stringResource(R.string.order_owl))
+            var current_user = firebaseViewModel.get_auth()
+            if (offerDetails.userId == current_user.currentUser?.uid.toString()){
+                Button(
+                    onClick = { }
+                ) {
+                    Text("Sell item")
+                }
+            }else{
+                Button(
+                    onClick = { }
+                ) {
+                    Text("Message")
+                }
             }
         }
     }
