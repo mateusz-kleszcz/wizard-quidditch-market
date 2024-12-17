@@ -24,7 +24,8 @@ fun AddOfferScreen(
     navController: NavController,
     viewModel: AddOffersViewModel,
     modifier: Modifier = Modifier,
-    onCreateOffer: (offer: OfferDetailsSave) -> Unit
+    onCreateOffer: (offer: OfferDetailsSave) -> Unit,
+    getLastLocation: () -> Unit,
 ) {
     val uiState by viewModel.uiState
 
@@ -44,6 +45,7 @@ fun AddOfferScreen(
             NumberField(uiState.price, viewModel::onPriceChange, "Price")
             BasicField(uiState.description, viewModel::onDescriptionChange, "Description")
             Button(onClick = {
+                getLastLocation()
                 onCreateOffer(
                     OfferDetailsSave(
                         uiState.name,

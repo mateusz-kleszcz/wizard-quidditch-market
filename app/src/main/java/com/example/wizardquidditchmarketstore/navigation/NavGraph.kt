@@ -24,6 +24,7 @@ fun NavGraph (
     signUpViewModel: SignUpViewModel,
     addOffersViewModel: AddOffersViewModel,
     firebaseViewModel: FirebaseViewModel,
+    getLastLocation: () -> Unit,
 ){
     NavHost(
         navController = navController,
@@ -60,6 +61,7 @@ fun NavGraph (
                 navController = navController,
                 viewModel = addOffersViewModel,
                 onCreateOffer = firebaseViewModel::saveOffer,
+                getLastLocation = getLastLocation,
             )
         }
         composable(route = Screens.Favourites.route){

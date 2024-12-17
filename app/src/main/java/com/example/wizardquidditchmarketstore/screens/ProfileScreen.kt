@@ -50,11 +50,7 @@ fun ProfileScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(top = 120.dp)
         ) {
-            Button(
-                onClick = { navController.navigate(Screens.AddOffer.route) }
-            ) {
-                Text(stringResource(R.string.add_offer))
-            }
+            Text("My offers")
             offersList.forEach { offer ->
                 OfferItem(offer, navController)
             }
@@ -71,6 +67,11 @@ fun ProfileScreen(
                     }
                 )
                 Text("Notifications: " + firebaseViewModel.userNotifications)
+            }
+            Button(
+                onClick = { navController.navigate(Screens.AddOffer.route) }
+            ) {
+                Text(stringResource(R.string.add_offer))
             }
         }
     }

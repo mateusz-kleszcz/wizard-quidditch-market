@@ -1,11 +1,14 @@
 package com.example.wizardquidditchmarketstore.models.offers
 
+import android.annotation.SuppressLint
+import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
@@ -14,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
-class FirebaseViewModel: ViewModel() {
+class FirebaseViewModel(): ViewModel() {
     private var db = Firebase.database
     private var auth = Firebase.auth
     private var itemsRef = db.getReference("Offers")
