@@ -8,13 +8,13 @@ import androidx.navigation.NavController
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
 
 @Composable
-fun OwlScreen(
+fun MessagesScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         topBar = { WizardNavigationBar(navController) }
     ) { innerPadding ->
-        Text("OWL")
+        Text("MessagesList")
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -42,6 +43,19 @@ fun WizardNavigationBar(
             label = { Text(stringResource(R.string.offers_list)) },
             onClick = {
                 navController.navigate(Screens.OffersList.route) {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            },
+            colors = colors,
+            modifier = modifier.padding(top = 20.dp)
+        )
+        NavigationBarItem(
+            icon = { Icon(imageVector = Icons.AutoMirrored.Filled.Message, contentDescription = "Offers List") },
+            selected = currentRoute == Screens.Messages.route,
+            label = { Text(stringResource(R.string.messages)) },
+            onClick = {
+                navController.navigate(Screens.Messages.route) {
                     launchSingleTop = true
                     restoreState = true
                 }

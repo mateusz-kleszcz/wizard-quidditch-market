@@ -15,10 +15,11 @@ data class OfferDetailsSave(
 )
 
 data class OfferDetails(
-    val name: String,
+    var name: String,
     val imgSrc: String,
     val price: Int,
     val description: String,
     val userId: String,
     var isUserFavourite: Boolean,
+    var isSold: Boolean,
 )
