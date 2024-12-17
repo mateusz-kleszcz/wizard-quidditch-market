@@ -8,5 +8,6 @@ sealed class Screens(val route: String) {
     object AddOffer : Screens("add_offer")
     object Favourites : Screens("favourites")
     object Profile : Screens("profile")
-    object Owl : Screens("owl")
+    object Messages : Screens("messages")
+    object MRoom : Screens("room")
 }
