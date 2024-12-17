@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
@@ -186,6 +187,7 @@ class FirebaseViewModel(): ViewModel() {
                 val price = snapshot.child("price").getValue<Int>() ?: 0
                 val description = snapshot.child("description").getValue<String>() ?: ""
                 val userId = snapshot.child("userId").getValue<String>() ?: ""
+                val isSold = snapshot.child("isSold").getValue<Boolean>() ?: false
                 var isUserFavourite = false
                 val favouritesSnapshot = usersRef
                     .child(auth.currentUser?.uid.toString())
@@ -205,7 +207,8 @@ class FirebaseViewModel(): ViewModel() {
                     price,
                     description,
                     userId,
-                    isUserFavourite
+                    isUserFavourite,
+                    isSold
                 )
             } catch (e: Exception) {
                 Log.d("ERROR", e.toString())
@@ -225,6 +228,7 @@ class FirebaseViewModel(): ViewModel() {
                     description = offerSave.description,
                     userId = auth.currentUser?.uid.toString(),
                     isUserFavourite = false,
+                    isSold = false
                 )
                 newItemRef.setValue(offerDetails).await()
                 fetchAllOffers()
@@ -232,5 +236,9 @@ class FirebaseViewModel(): ViewModel() {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun get_auth(): FirebaseAuth {
+       return auth
     }
 }
