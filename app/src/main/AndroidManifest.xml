@@ -25,7 +25,7 @@
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBK089iEr9tUHofZFO6w-EQOLcSdsTnzfo" />
+            android:value="AIzaSyB6iD4PTr9txu15_-l2ltmBsALs-LKJqUo" />
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

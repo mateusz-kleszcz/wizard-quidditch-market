@@ -243,6 +243,21 @@ class FirebaseViewModel(): ViewModel() {
         }
     }
 
+    fun sellItem(offerId: String) {
+        viewModelScope.launch {
+            try {
+                itemsRef
+                    .child(offerId)
+                    .child("isSold")
+                    .setValue(true)
+                    .await()
+                fetchOfferDetails(offerId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun get_auth(): FirebaseAuth {
         return auth
     }

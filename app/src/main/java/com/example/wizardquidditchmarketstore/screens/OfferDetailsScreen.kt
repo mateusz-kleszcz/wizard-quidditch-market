@@ -112,14 +112,15 @@ fun OfferDetailsScreen(
             }
             val currentUser = firebaseViewModel.get_auth()
             if (offerDetails.userId == currentUser.currentUser?.uid.toString()){
-                Button(
-                    onClick = { }
-                ) {
-                    Text("Sell item")
-                }
-                if(offerDetails.isSold){
+                if (!offerDetails.isSold) {
                     Button(
-                        onClick = { }
+                        onClick = { firebaseViewModel.sellItem(offerId) }
+                    ) {
+                        Text("Sell item")
+                    }
+                } else {
+                    Button(
+                        onClick = {  }
                     ) {
                         Text("Send Owl")
                     }
