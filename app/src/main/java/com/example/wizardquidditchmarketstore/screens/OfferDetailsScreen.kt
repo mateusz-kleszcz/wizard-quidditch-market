@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.wizardquidditchmarketstore.R
+import com.example.wizardquidditchmarketstore.common.GoogleMapFeature
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
 import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
 import com.example.wizardquidditchmarketstore.navigation.Screens
@@ -44,7 +45,7 @@ fun OfferDetailsScreen(
     modifier: Modifier = Modifier
 ) {
     firebaseViewModel.fetchOfferDetails(offerId)
-    var offerDetails = firebaseViewModel.offerDetails ?: return
+    val offerDetails = firebaseViewModel.offerDetails ?: return
 
     Scaffold(
         topBar = { WizardNavigationBar(navController) }
@@ -80,6 +81,7 @@ fun OfferDetailsScreen(
                         fontWeight = FontWeight.Bold
                     )
                     Text(stringResource(R.string.price_label) + offerDetails.price.toString())
+                    Text(offerDetails.date)
                     if (offerDetails.isUserFavourite) {
                         IconButton(
                             onClick = { firebaseViewModel.removeFromFavourites(offerId) },
@@ -108,34 +110,33 @@ fun OfferDetailsScreen(
                 )
                 Text(offerDetails.description)
             }
-            var current_user = firebaseViewModel.get_auth()
-            if (offerDetails.userId == current_user.currentUser?.uid.toString()){
+            val currentUser = firebaseViewModel.get_auth()
+            if (offerDetails.userId == currentUser.currentUser?.uid.toString()){
                 Button(
                     onClick = { }
                 ) {
                     Text("Sell item")
                 }
-                if(offerDetails.isSold == true){
+                if(offerDetails.isSold){
                     Button(
                         onClick = { }
                     ) {
                         Text("Send Owl")
                     }
                 }
-            }else{
+            } else {
                 Button(
                     onClick = { navController.navigate(
                         Screens.MRoom.route.replace(
-                                oldValue = "{id}",
-                                newValue = offerDetails.name
-                            )
+                            oldValue = "{id}",
+                            newValue = offerDetails.name
+                        )
                     )}
                 ) {
                     Text("Send message")
                 }
             }
-
-
+            GoogleMapFeature(offerDetails.latitude, offerDetails.longitude)
         }
     }
 }

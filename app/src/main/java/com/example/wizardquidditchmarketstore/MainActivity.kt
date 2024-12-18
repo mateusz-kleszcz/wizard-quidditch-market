@@ -24,6 +24,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.LocationServices
 
 class MainActivity : ComponentActivity() {
     private val accountService: AccountService = AccountServiceImpl()
@@ -37,6 +38,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -71,15 +74,6 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        @SuppressLint("MissingPermission")
-        fun getLastLocation() {
-            Log.d("TAG", "Teste")
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    Log.d("Teste", "Location:" + location.toString())
-                }
-        }
-
         enableEdgeToEdge()
 
         setContent {
@@ -92,7 +86,7 @@ class MainActivity : ComponentActivity() {
                         signUpViewModel=signUpViewModel,
                         addOffersViewModel=addOffersViewModel,
                         firebaseViewModel=firebaseViewModel,
-                        getLastLocation=::getLastLocation,
+                        fusedLocationClient=fusedLocationClient,
                     )
                 }
             }

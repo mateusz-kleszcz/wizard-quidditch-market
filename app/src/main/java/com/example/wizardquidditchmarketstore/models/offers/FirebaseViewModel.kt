@@ -1,14 +1,11 @@
 package com.example.wizardquidditchmarketstore.models.offers
 
-import android.annotation.SuppressLint
-import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.getValue
@@ -186,6 +183,9 @@ class FirebaseViewModel(): ViewModel() {
                 val imgSrc = snapshot.child("imgSrc").getValue<String>() ?: ""
                 val price = snapshot.child("price").getValue<Int>() ?: 0
                 val description = snapshot.child("description").getValue<String>() ?: ""
+                val latitude = snapshot.child("latitude").getValue<Double>() ?: 0.0
+                val longitude = snapshot.child("longitude").getValue<Double>() ?: 0.0
+                val date = snapshot.child("date").getValue<String>() ?: ""
                 val userId = snapshot.child("userId").getValue<String>() ?: ""
                 val isSold = snapshot.child("isSold").getValue<Boolean>() ?: false
                 var isUserFavourite = false
@@ -196,7 +196,6 @@ class FirebaseViewModel(): ViewModel() {
                     await()
                 for (ds in favouritesSnapshot.getChildren()) {
                     val offerId = ds.getValue<String>() ?: ""
-                    Log.d("TAGGG", offerId + id)
                     if (offerId == id) {
                         isUserFavourite = true
                     }
@@ -208,7 +207,10 @@ class FirebaseViewModel(): ViewModel() {
                     description,
                     userId,
                     isUserFavourite,
-                    isSold
+                    longitude,
+                    latitude,
+                    date,
+                    isSold,
                 )
             } catch (e: Exception) {
                 Log.d("ERROR", e.toString())
@@ -226,9 +228,12 @@ class FirebaseViewModel(): ViewModel() {
                     imgSrc = offerSave.imgSrc,
                     price = offerSave.price,
                     description = offerSave.description,
+                    latitude = offerSave.latitude,
+                    longitude = offerSave.longitude,
+                    date = offerSave.date,
                     userId = auth.currentUser?.uid.toString(),
                     isUserFavourite = false,
-                    isSold = false
+                    isSold = false,
                 )
                 newItemRef.setValue(offerDetails).await()
                 fetchAllOffers()
@@ -239,6 +244,6 @@ class FirebaseViewModel(): ViewModel() {
     }
 
     fun get_auth(): FirebaseAuth {
-       return auth
+        return auth
     }
 }

@@ -12,14 +12,20 @@ data class OfferDetailsSave(
     val imgSrc: String,
     val price: Int,
     val description: String,
+    val longitude: Double,
+    val latitude: Double,
+    val date: String,
 )
 
 data class OfferDetails(
-    var name: String,
+    val name: String,
     val imgSrc: String,
     val price: Int,
     val description: String,
     val userId: String,
     var isUserFavourite: Boolean,
-    var isSold: Boolean,
+    val longitude: Double,
+    val latitude: Double,
+    val date: String,
+    val isSold: Boolean,
 )
