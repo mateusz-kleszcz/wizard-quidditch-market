@@ -132,6 +132,7 @@ fun AddOfferScreen(
                 coil3.compose.AsyncImage(
                     model = capturedImageUri,
                     contentDescription = "photo",
+                    modifier = Modifier.size(200.dp)
                 )
             }
 
