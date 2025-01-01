@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -64,10 +65,7 @@ fun OfferDetailsScreen(
                     .fillMaxSize()
             ) {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(offerDetails.imgSrc)
-                        .crossfade(true)
-                        .build(),
+                    model = offerDetails.imgSrc.toUri(),
                     contentDescription = offerDetails.name,
                     contentScale = ContentScale.Crop,
                     modifier = modifier
