@@ -105,6 +105,7 @@ fun AddOfferScreen(
                     // Request a permission
                     permissionLauncher.launch(android.Manifest.permission.CAMERA)
                 }
+                viewModel.onImgSrcChange(capturedImageUri.toString())
             }) {
                 Text(text = "Photo")
             }

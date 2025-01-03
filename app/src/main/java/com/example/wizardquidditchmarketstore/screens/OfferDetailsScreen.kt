@@ -36,6 +36,8 @@ import com.example.wizardquidditchmarketstore.R
 import com.example.wizardquidditchmarketstore.common.GoogleMapFeature
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
 import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
+import com.example.wizardquidditchmarketstore.models.offers.OfferDetailsSave
+import com.example.wizardquidditchmarketstore.models.offers.UsersRoom
 import com.example.wizardquidditchmarketstore.navigation.Screens
 
 @Composable
@@ -43,6 +45,7 @@ fun OfferDetailsScreen(
     navController: NavController,
     firebaseViewModel: FirebaseViewModel,
     offerId: String,
+    onCreateRoom: (users: UsersRoom) -> Unit,
     modifier: Modifier = Modifier
 ) {
     firebaseViewModel.fetchOfferDetails(offerId)
@@ -125,7 +128,17 @@ fun OfferDetailsScreen(
                 }
             } else {
                 Button(
-                    onClick = { navController.navigate(
+                    onClick = {
+                        val userRoom = UsersRoom(
+                            user1 = offerDetails.userId,
+                            user2 = firebaseViewModel.get_auth().currentUser?.uid.toString()
+                        )
+                        onCreateRoom(
+                            userRoom
+                        )
+
+
+                        navController.navigate(
                         Screens.MRoom.route.replace(
                             oldValue = "{id}",
                             newValue = offerDetails.name

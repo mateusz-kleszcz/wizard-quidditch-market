@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.getValue
@@ -20,6 +21,7 @@ class FirebaseViewModel(): ViewModel() {
     private var auth = Firebase.auth
     private var itemsRef = db.getReference("Offers")
     private var usersRef = db.getReference("Users")
+    private var messagesRoomRef = db.getReference("MessagesRoom")
 
     var offersList by mutableStateOf(ArrayList<Offer>())
     var favourtiesOffersList by mutableStateOf(ArrayList<Offer>())
@@ -192,8 +194,8 @@ class FirebaseViewModel(): ViewModel() {
                 val favouritesSnapshot = usersRef
                     .child(auth.currentUser?.uid.toString())
                     .child("favourites")
-                    .get().
-                    await()
+                    .get()
+                    .await()
                 for (ds in favouritesSnapshot.getChildren()) {
                     val offerId = ds.getValue<String>() ?: ""
                     if (offerId == id) {
@@ -243,6 +245,47 @@ class FirebaseViewModel(): ViewModel() {
         }
     }
 
+    fun saveMessageRoom(userRoom: UsersRoom){
+        viewModelScope.launch {
+            try {
+                var bool = false
+                val userId = auth.currentUser?.uid.toString()
+                val userRoomRef = usersRef.child(userId).child("rooms").get().await()
+                for (ds in userRoomRef.getChildren()) {
+                    val id = ds.getValue<String>() ?: ""
+                    val snapshot2 = messagesRoomRef.child(id).child("users").get().await()
+                    val users = UsersRoom(
+                        user1 = snapshot2.child("user1").getValue<String>() ?: "",
+                        user2 = snapshot2.child("user2").getValue<String>() ?: ""
+                    )
+
+                    if(users.user1 == userRoom.user1 && users.user2 == userRoom.user2){
+                        println("-------------")
+                        println("AAAAAAAAAAAAAAA")
+                        bool = true
+                    }
+
+                }
+                if(!bool){
+                    val newItemRef = messagesRoomRef.push()
+                    val messageRoom = MessageRoom(
+                        users = userRoom,
+                        messages = null
+                    )
+                    newItemRef.setValue(messageRoom).await()
+                    val roomsRef = usersRef
+                        .child(auth.currentUser?.uid.toString())
+                        .child("rooms")
+                        .push()
+                    roomsRef.setValue(newItemRef.key)
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun sellItem(offerId: String) {
         viewModelScope.launch {
             try {
@@ -261,4 +304,34 @@ class FirebaseViewModel(): ViewModel() {
     fun get_auth(): FirebaseAuth {
         return auth
     }
+
+    fun hasRoom(userRoom: UsersRoom): Boolean {
+        var bool = false
+        viewModelScope.launch {
+            try {
+                val userId = auth.currentUser?.uid.toString()
+                val userRoomRef = usersRef.child(userId).child("rooms").get().await()
+                for (ds in userRoomRef.getChildren()) {
+                    val id = ds.getValue<String>() ?: ""
+                    val snapshot2 = messagesRoomRef.child(id).child("users").get().await()
+                    val users = UsersRoom(
+                        user1 = snapshot2.child("user1").getValue<String>() ?: "",
+                        user2 = snapshot2.child("user2").getValue<String>() ?: ""
+                    )
+
+                    if(users.user1 == userRoom.user1 && users.user2 == userRoom.user2){
+                        bool = true
+                    }
+
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        return bool
+    }
+
+
 }
