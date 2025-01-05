@@ -305,33 +305,7 @@ class FirebaseViewModel(): ViewModel() {
         return auth
     }
 
-    fun hasRoom(userRoom: UsersRoom): Boolean {
-        var bool = false
-        viewModelScope.launch {
-            try {
-                val userId = auth.currentUser?.uid.toString()
-                val userRoomRef = usersRef.child(userId).child("rooms").get().await()
-                for (ds in userRoomRef.getChildren()) {
-                    val id = ds.getValue<String>() ?: ""
-                    val snapshot2 = messagesRoomRef.child(id).child("users").get().await()
-                    val users = UsersRoom(
-                        user1 = snapshot2.child("user1").getValue<String>() ?: "",
-                        user2 = snapshot2.child("user2").getValue<String>() ?: ""
-                    )
-
-                    if(users.user1 == userRoom.user1 && users.user2 == userRoom.user2){
-                        bool = true
-                    }
-
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        return bool
-    }
+    
 
 
 }
