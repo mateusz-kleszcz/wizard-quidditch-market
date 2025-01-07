@@ -36,7 +36,8 @@ fun NavGraph (
             val id: String = navBackStack.arguments?.getString("id") ?: ""
             MessageRoom(
                 navController = navController,
-                userName = id
+                firebaseViewModel = firebaseViewModel,
+                room = id
             )
         }
         composable(route = Screens.SignIn.route){
@@ -89,6 +90,7 @@ fun NavGraph (
         composable(route = Screens.Messages.route){
             MessagesScreen(
                 navController = navController,
+                firebaseViewModel = firebaseViewModel,
             )
         }
     }

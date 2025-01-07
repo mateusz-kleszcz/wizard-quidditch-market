@@ -29,6 +29,37 @@ class FirebaseViewModel(): ViewModel() {
     var offerDetails by mutableStateOf<OfferDetails?>(null)
     var userNotifications by mutableStateOf(false)
 
+    var userMessages by mutableStateOf(ArrayList<MessageItem>())
+    var currentMessageRoom by mutableStateOf<MessageRoom?>(null)
+
+    fun fetchAllUserMessages(){
+        viewModelScope.launch {
+            try {
+                val userId = auth.currentUser?.uid.toString()
+                val userRoomRef = usersRef.child(userId).child("rooms").get().await()
+                val messages = ArrayList<MessageItem>()
+                for (ds in userRoomRef.getChildren()) {
+                    val id = ds.getValue<String>() ?: ""
+                    val user:String
+                    val roomSnapshot = messagesRoomRef.child(id).child("users").get().await()
+                    val user1 = roomSnapshot.child("user1").getValue<String>() ?: ""
+                    val user2 = roomSnapshot.child("user2").getValue<String>() ?: ""
+                    if (user1==userId){
+                        user = user2
+                    }else{
+                        user = user1
+                    }
+                    val room = MessageItem(id,user)
+                    messages.add(room)
+                }
+                userMessages = messages
+            } catch (e: Exception) {
+                Log.d("ERROR", e.toString())
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun fetchAllOffers() {
         viewModelScope.launch {
             try {
@@ -177,6 +208,33 @@ class FirebaseViewModel(): ViewModel() {
         }
     }
 
+    fun fetchMessageRoom(id: String){
+        viewModelScope.launch {
+            try {
+                val userSnapshot = messagesRoomRef.child(id).child("users").get().await()
+                val users = UsersRoom(
+                    user1 = userSnapshot.child("user1").getValue<String>() ?: "",
+                    user2 = userSnapshot.child("user2").getValue<String>() ?: ""
+                )
+                var messages = ArrayList<MessagesDetails>()
+                val messagesSnapshot = messagesRoomRef.child(id).child("messages").get().await()
+                for (ds in messagesSnapshot.getChildren()){
+                    val name = ds.child("name").getValue<String>() ?: ""
+                    val messagesDetails = MessagesDetails(
+                        name = name
+                    )
+                    messages.add(messagesDetails)
+                }
+                currentMessageRoom = MessageRoom(
+                    users,messages
+                )
+            } catch (e: Exception) {
+                Log.d("ERROR", e.toString())
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun fetchOfferDetails(id: String) {
         viewModelScope.launch {
             try {
@@ -248,7 +306,7 @@ class FirebaseViewModel(): ViewModel() {
     fun saveMessageRoom(userRoom: UsersRoom){
         viewModelScope.launch {
             try {
-                var bool = false
+                var roomExists = false
                 val userId = auth.currentUser?.uid.toString()
                 val userRoomRef = usersRef.child(userId).child("rooms").get().await()
                 for (ds in userRoomRef.getChildren()) {
@@ -259,14 +317,13 @@ class FirebaseViewModel(): ViewModel() {
                         user2 = snapshot2.child("user2").getValue<String>() ?: ""
                     )
 
-                    if(users.user1 == userRoom.user1 && users.user2 == userRoom.user2){
-                        println("-------------")
-                        println("AAAAAAAAAAAAAAA")
-                        bool = true
+                    if((users.user1 == userRoom.user1 && users.user2 == userRoom.user2)||
+                        (users.user2 == userRoom.user1 && users.user1 == userRoom.user2)){
+                        roomExists = true
                     }
 
                 }
-                if(!bool){
+                if(!roomExists){
                     val newItemRef = messagesRoomRef.push()
                     val messageRoom = MessageRoom(
                         users = userRoom,
@@ -274,10 +331,15 @@ class FirebaseViewModel(): ViewModel() {
                     )
                     newItemRef.setValue(messageRoom).await()
                     val roomsRef = usersRef
-                        .child(auth.currentUser?.uid.toString())
+                        .child(userRoom.user1)
                         .child("rooms")
                         .push()
                     roomsRef.setValue(newItemRef.key)
+                    val roomsRef2 = usersRef
+                        .child(userRoom.user2)
+                        .child("rooms")
+                        .push()
+                    roomsRef2.setValue(newItemRef.key)
                 }
 
             } catch (e: Exception) {

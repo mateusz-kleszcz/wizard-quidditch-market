@@ -1,20 +1,45 @@
 package com.example.wizardquidditchmarketstore.screens
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.wizardquidditchmarketstore.common.MessageItem
+import com.example.wizardquidditchmarketstore.common.OfferItem
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
+import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
 
 @Composable
 fun MessagesScreen(
     navController: NavController,
+    firebaseViewModel: FirebaseViewModel,
     modifier: Modifier = Modifier
 ) {
+    firebaseViewModel.fetchAllUserMessages()
+    val userMessages = firebaseViewModel.userMessages
     Scaffold(
         topBar = { WizardNavigationBar(navController) }
     ) { innerPadding ->
-        Text("MessagesList")
+        Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(top = 120.dp)
+        ) {
+            userMessages.forEach { messageItem ->
+                MessageItem(messageItem, navController)
+            }
+        }
     }
 }

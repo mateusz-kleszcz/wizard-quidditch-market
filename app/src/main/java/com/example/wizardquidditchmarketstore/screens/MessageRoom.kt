@@ -16,13 +16,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
+import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
+
 
 @Composable
 fun MessageRoom(
     navController: NavController,
-    userName: String,
+    firebaseViewModel: FirebaseViewModel,
+    room: String,
     modifier: Modifier = Modifier,
 ) {
+    firebaseViewModel.fetchMessageRoom(room)
+    val currentRoom = firebaseViewModel.currentMessageRoom ?: return
+    val user = firebaseViewModel.get_auth().currentUser?.uid.toString()
     Scaffold(
         topBar = { WizardNavigationBar(navController) }
     ) { innerPadding ->
@@ -34,10 +40,26 @@ fun MessageRoom(
                 .verticalScroll(rememberScrollState())
                 .padding(top = 132.dp)
                 .padding(horizontal = 16.dp)
-        ) {Text(
-            userName,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )}
+        ) {
+            if (user == currentRoom.users.user1) {
+                Text(
+                    currentRoom.users.user2,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            } else {
+                Text(
+                    currentRoom.users.user1,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            if(currentRoom.messages!= null){
+                for( message in currentRoom.messages){
+                    Text(message.name)
+                }
+            }
+
+        }
     }
 }
