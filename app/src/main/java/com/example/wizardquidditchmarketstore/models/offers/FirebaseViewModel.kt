@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -367,7 +368,9 @@ class FirebaseViewModel(): ViewModel() {
         return auth
     }
 
-    
+    fun getMessagesRef(id:String): DatabaseReference {
+        return messagesRoomRef.child(id).child("messages")
+    }
 
 
 }
