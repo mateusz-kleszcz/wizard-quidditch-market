@@ -20,6 +20,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -39,17 +42,20 @@ import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
 import com.example.wizardquidditchmarketstore.models.offers.OfferDetailsSave
 import com.example.wizardquidditchmarketstore.models.offers.UsersRoom
 import com.example.wizardquidditchmarketstore.navigation.Screens
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 
 @Composable
 fun OfferDetailsScreen(
     navController: NavController,
     firebaseViewModel: FirebaseViewModel,
     offerId: String,
-    onCreateRoom: (users: UsersRoom) -> Unit,
     modifier: Modifier = Modifier
 ) {
     firebaseViewModel.fetchOfferDetails(offerId)
     val offerDetails = firebaseViewModel.offerDetails ?: return
+    val currentRoom by remember { mutableStateOf(firebaseViewModel.currentMessageRoom) }
 
     Scaffold(
         topBar = { WizardNavigationBar(navController) }
@@ -131,21 +137,17 @@ fun OfferDetailsScreen(
                     onClick = {
                         val userRoom = UsersRoom(
                             user1 = offerDetails.userId,
-                            user2 = firebaseViewModel.get_auth().currentUser?.uid.toString()
+                            user2 = firebaseViewModel.get_auth().currentUser?.uid.orEmpty()
                         )
-                        onCreateRoom(
-                            userRoom
-                        )
-
-
-                        navController.navigate(
-                        Screens.MRoom.route.replace(
-                            oldValue = "{id}",
-                            newValue = offerDetails.name
-                        )
-                    )}
+                        firebaseViewModel.saveMessageRoom(userRoom) { roomId ->
+                            // Navigate to the chat screen once the room is saved
+                            navController.navigate(
+                                Screens.MRoom.route.replace("{id}", roomId)
+                            )
+                        }
+                    }
                 ) {
-                    Text("Send message")
+                    Text("Send Message")
                 }
             }
             GoogleMapFeature(offerDetails.latitude, offerDetails.longitude)

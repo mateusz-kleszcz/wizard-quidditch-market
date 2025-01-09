@@ -14,6 +14,7 @@ class ChatViewModel(
     id:String,
     firebaseViewModel: FirebaseViewModel,
 ): ViewModel() {
+    private val firebase = firebaseViewModel
     private val database = firebaseViewModel.getMessagesRef(id)
     private var _currentRoom = MutableStateFlow<List<MessagesDetails>>(emptyList())
 
@@ -60,6 +61,13 @@ class ChatViewModel(
 
     }
 
+    override public fun onCleared() {
+        super.onCleared()
+    }
 
+    fun sendMessage(text: String) {
+        val message = MessagesDetails(name = firebase.get_auth().currentUser?.uid.toString() , text = text)
+        database.push().setValue(message)
+    }
 
 }

@@ -63,7 +63,6 @@ fun NavGraph (
             OfferDetailsScreen(
                 navController = navController,
                 firebaseViewModel = firebaseViewModel,
-                onCreateRoom = firebaseViewModel::saveMessageRoom,
                 offerId = id
             )
         }
