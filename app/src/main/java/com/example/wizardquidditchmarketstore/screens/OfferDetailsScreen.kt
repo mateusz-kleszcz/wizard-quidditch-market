@@ -34,17 +34,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.wizardquidditchmarketstore.R
 import com.example.wizardquidditchmarketstore.common.GoogleMapFeature
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
 import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
-import com.example.wizardquidditchmarketstore.models.offers.OfferDetailsSave
 import com.example.wizardquidditchmarketstore.models.offers.UsersRoom
 import com.example.wizardquidditchmarketstore.navigation.Screens
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
 
 @Composable
 fun OfferDetailsScreen(
@@ -55,7 +50,6 @@ fun OfferDetailsScreen(
 ) {
     firebaseViewModel.fetchOfferDetails(offerId)
     val offerDetails = firebaseViewModel.offerDetails ?: return
-    val currentRoom by remember { mutableStateOf(firebaseViewModel.currentMessageRoom) }
 
     Scaffold(
         topBar = { WizardNavigationBar(navController) }
@@ -137,7 +131,7 @@ fun OfferDetailsScreen(
                     onClick = {
                         val userRoom = UsersRoom(
                             user1 = offerDetails.userId,
-                            user2 = firebaseViewModel.get_auth().currentUser?.uid.orEmpty()
+                            user2 = firebaseViewModel.get_auth().currentUser?.uid.toString()
                         )
                         firebaseViewModel.saveMessageRoom(userRoom) { roomId ->
                             // Navigate to the chat screen once the room is saved

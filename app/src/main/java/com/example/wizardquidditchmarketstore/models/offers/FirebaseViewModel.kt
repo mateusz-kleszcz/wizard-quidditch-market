@@ -34,7 +34,6 @@ class FirebaseViewModel(): ViewModel() {
     var userNotifications by mutableStateOf(false)
 
     var userMessages by mutableStateOf(ArrayList<MessageItem>())
-    var currentMessageRoom by mutableStateOf("")
 
     fun fetchAllUserMessages(){
         viewModelScope.launch {
@@ -283,7 +282,6 @@ class FirebaseViewModel(): ViewModel() {
     fun saveMessageRoom(userRoom: UsersRoom, onRoomSaved: (String) -> Unit) {
         viewModelScope.launch {
             try {
-                var roomExists = false
                 val userId = auth.currentUser?.uid.toString()
                 val userRoomRef = usersRef.child(userId).child("rooms").get().await()
 
@@ -298,27 +296,23 @@ class FirebaseViewModel(): ViewModel() {
                     if ((users.user1 == userRoom.user1 && users.user2 == userRoom.user2) ||
                         (users.user2 == userRoom.user1 && users.user1 == userRoom.user2)
                     ) {
-                        roomExists = true
-                        currentMessageRoom = id
                         onRoomSaved(id) // Notify the callback with the existing room ID
                         return@launch
                     }
                 }
 
-                if (!roomExists) {
-                    val newItemRef = messagesRoomRef.push()
-                    val messageRoom = MessageRoom(
-                        users = userRoom,
-                        messages = null
-                    )
-                    newItemRef.setValue(messageRoom).await()
+                val newItemRef = messagesRoomRef.push()
+                val messageRoom = MessageRoom(
+                    users = userRoom,
+                    messages = null
+                )
+                newItemRef.setValue(messageRoom).await()
 
-                    usersRef.child(userRoom.user1).child("rooms").push().setValue(newItemRef.key).await()
-                    usersRef.child(userRoom.user2).child("rooms").push().setValue(newItemRef.key).await()
+                usersRef.child(userRoom.user1).child("rooms").push().setValue(newItemRef.key).await()
+                usersRef.child(userRoom.user2).child("rooms").push().setValue(newItemRef.key).await()
 
-                    currentMessageRoom = newItemRef.key ?: ""
-                    onRoomSaved(currentMessageRoom) // Notify the callback with the new room ID
-                }
+                onRoomSaved(newItemRef.key ?: "") // Notify the callback with the new room ID
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
