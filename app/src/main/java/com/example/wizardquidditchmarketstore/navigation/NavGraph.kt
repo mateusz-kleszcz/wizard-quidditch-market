@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
+import com.example.wizardquidditchmarketstore.screens.ARScreen
 import com.example.wizardquidditchmarketstore.screens.AddOfferScreen
 import com.example.wizardquidditchmarketstore.screens.FavouritesScreen
 import com.example.wizardquidditchmarketstore.screens.LoginScreen
@@ -90,6 +91,11 @@ fun NavGraph (
             MessagesScreen(
                 navController = navController,
                 firebaseViewModel = firebaseViewModel,
+            )
+        }
+        composable(route = Screens.Owl.route){
+            ARScreen(
+                navController = navController,
             )
         }
     }

@@ -121,7 +121,7 @@ fun OfferDetailsScreen(
                     }
                 } else {
                     Button(
-                        onClick = {  }
+                        onClick = { navController.navigate(Screens.Owl.route) }
                     ) {
                         Text("Send Owl")
                     }
