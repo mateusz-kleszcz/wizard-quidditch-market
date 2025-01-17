@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.wizardquidditchmarketstore.R
+import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
 import com.example.wizardquidditchmarketstore.models.offers.MessageItem
 import com.example.wizardquidditchmarketstore.navigation.Screens
 
@@ -27,6 +28,8 @@ fun MessageItem(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+
+
     if (messageItem==null){
         return
     }
@@ -41,6 +44,9 @@ fun MessageItem(
                         .replace(
                             oldValue = "{id}",
                             newValue = messageItem.room
+                        ).replace(
+                            oldValue = "{name}",
+                            newValue = messageItem.name
                         )
                 )
             })

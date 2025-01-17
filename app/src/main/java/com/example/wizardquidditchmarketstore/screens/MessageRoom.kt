@@ -39,6 +39,7 @@ fun MessageRoom(
     navController: NavController,
     firebaseViewModel: FirebaseViewModel,
     room: String,
+    name: String,
     modifier: Modifier = Modifier,
 ) {
     val chatViewModel = ChatViewModel(room,firebaseViewModel)
@@ -62,7 +63,7 @@ fun MessageRoom(
                 .padding(top = 132.dp)
                 .padding(horizontal = 16.dp)
         ) {
-            MessageList(messages.value)
+            MessageList(messages.value,name)
             MessageInput { message ->
                 chatViewModel.sendMessage(message)
             }
@@ -71,7 +72,7 @@ fun MessageRoom(
 }
 
 @Composable
-fun MessageList(messages: List<MessagesDetails>) {
+fun MessageList(messages: List<MessagesDetails>,name: String) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -79,6 +80,7 @@ fun MessageList(messages: List<MessagesDetails>) {
             .fillMaxWidth()
             .padding(8.dp)
     ) {
+        Text(text = name)
         if(messages!=null){
             messages.forEach { message ->
                 Text(

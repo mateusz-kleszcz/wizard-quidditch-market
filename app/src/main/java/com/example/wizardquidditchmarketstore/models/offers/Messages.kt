@@ -1,6 +1,7 @@
 package com.example.wizardquidditchmarketstore.models.offers
 
 data class MessageRoom(
+    val itemId: String,
     val users: UsersRoom,
     val messages: ArrayList<MessagesDetails>? = null
 )
@@ -18,6 +19,7 @@ data class UsersRoom(
 )
 
 data class MessageItem(
+    val name: String,
     val room: String,
     val user: String
 )

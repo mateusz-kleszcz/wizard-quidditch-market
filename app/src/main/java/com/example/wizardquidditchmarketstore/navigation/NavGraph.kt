@@ -31,14 +31,16 @@ fun NavGraph (
 ){
     NavHost(
         navController = navController,
-        startDestination = Screens.OffersList.route)
+        startDestination = Screens.SignIn.route)
     {
-        composable(route = Screens.MRoom.route +  "?id={id}") { navBackStack ->
+        composable(route = Screens.MRoom.route +  "?id={id}" + "?name={name}") { navBackStack ->
             val id: String = navBackStack.arguments?.getString("id") ?: ""
+            val name: String = navBackStack.arguments?.getString("name") ?: ""
             MessageRoom(
                 navController = navController,
                 firebaseViewModel = firebaseViewModel,
-                room = id
+                room = id,
+                name = name
             )
         }
         composable(route = Screens.SignIn.route){

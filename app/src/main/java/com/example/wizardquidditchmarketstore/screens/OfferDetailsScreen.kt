@@ -133,10 +133,12 @@ fun OfferDetailsScreen(
                             user1 = offerDetails.userId,
                             user2 = firebaseViewModel.get_auth().currentUser?.uid.toString()
                         )
-                        firebaseViewModel.saveMessageRoom(userRoom) { roomId ->
+                        firebaseViewModel.saveMessageRoom(userRoom,offerId) { roomId ->
                             // Navigate to the chat screen once the room is saved
                             navController.navigate(
-                                Screens.MRoom.route.replace("{id}", roomId)
+                                Screens.MRoom.route
+                                    .replace("{id}", roomId)
+                                    .replace(oldValue = "{name}",newValue = offerDetails.name)
                             )
                         }
                     }

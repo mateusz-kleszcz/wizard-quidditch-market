@@ -4,18 +4,14 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -52,7 +48,9 @@ class FirebaseViewModel(): ViewModel() {
                     }else{
                         user = user1
                     }
-                    val room = MessageItem(id,user)
+                    val itemId = messagesRoomRef.child(id).get().await().child("itemId").getValue<String>() ?: ""
+                    val name = itemsRef.child(itemId).get().await().child("name").getValue<String>() ?: ""
+                    val room = MessageItem(name,id,user)
                     messages.add(room)
                 }
                 userMessages = messages
@@ -279,7 +277,7 @@ class FirebaseViewModel(): ViewModel() {
         }
     }
 
-    fun saveMessageRoom(userRoom: UsersRoom, onRoomSaved: (String) -> Unit) {
+    fun saveMessageRoom(userRoom: UsersRoom, offerId: String, onRoomSaved: (String) -> Unit) {
         viewModelScope.launch {
             try {
                 val userId = auth.currentUser?.uid.toString()
@@ -288,21 +286,26 @@ class FirebaseViewModel(): ViewModel() {
                 for (ds in userRoomRef.children) {
                     val id = ds.getValue<String>() ?: ""
                     val snapshot = messagesRoomRef.child(id).child("users").get().await()
-                    val users = UsersRoom(
-                        user1 = snapshot.child("user1").getValue<String>() ?: "",
-                        user2 = snapshot.child("user2").getValue<String>() ?: ""
-                    )
+                    val itemId = messagesRoomRef.child(id).child("itemId").get().await().getValue<String>() ?: ""
+                    if(itemId==offerId){
+                        val users = UsersRoom(
+                            user1 = snapshot.child("user1").getValue<String>() ?: "",
+                            user2 = snapshot.child("user2").getValue<String>() ?: ""
+                        )
 
-                    if ((users.user1 == userRoom.user1 && users.user2 == userRoom.user2) ||
-                        (users.user2 == userRoom.user1 && users.user1 == userRoom.user2)
-                    ) {
-                        onRoomSaved(id) // Notify the callback with the existing room ID
-                        return@launch
+                        if ((users.user1 == userRoom.user1 && users.user2 == userRoom.user2) ||
+                            (users.user2 == userRoom.user1 && users.user1 == userRoom.user2)
+                        ) {
+                            onRoomSaved(id)
+                            return@launch
+                        }
                     }
+
                 }
 
                 val newItemRef = messagesRoomRef.push()
                 val messageRoom = MessageRoom(
+                    itemId = offerId,
                     users = userRoom,
                     messages = null
                 )
@@ -311,7 +314,9 @@ class FirebaseViewModel(): ViewModel() {
                 usersRef.child(userRoom.user1).child("rooms").push().setValue(newItemRef.key).await()
                 usersRef.child(userRoom.user2).child("rooms").push().setValue(newItemRef.key).await()
 
-                onRoomSaved(newItemRef.key ?: "") // Notify the callback with the new room ID
+                itemsRef.child(offerId).child("rooms").push().setValue(newItemRef.key).await()
+
+                onRoomSaved(newItemRef.key ?: "")
 
             } catch (e: Exception) {
                 e.printStackTrace()
