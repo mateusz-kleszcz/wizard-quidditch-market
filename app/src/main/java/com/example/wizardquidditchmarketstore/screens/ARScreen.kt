@@ -4,9 +4,7 @@ import android.view.MotionEvent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -179,7 +177,13 @@ fun ARScreen(
                     onClick = {
                         if(offerDetails.sold==firebaseViewModel.get_auth().currentUser?.uid.toString()){
                             isSold = true
-                            firebaseViewModel.removeOffer(offerId)
+                            var roomId = ""
+                            offerDetails.buyers?.forEach { offerBuyers ->
+                                if(offerBuyers.userId==offerDetails.sold){
+                                    roomId = offerBuyers.roomId.toString()
+                                }
+                            }
+                            firebaseViewModel.removeOffer(offerId,roomId)
                         }else{
                             firebaseViewModel.setBuyer(offerId,userId){
                                 navController.navigate(

@@ -371,10 +371,23 @@ class FirebaseViewModel(): ViewModel() {
         }
     }
 
-    fun removeOffer(offerId: String) {
+    fun removeOffer(offerId: String, roomId: String) {
         viewModelScope.launch {
             try {
                 itemsRef.child(offerId).removeValue()
+                val users = messagesRoomRef.child(roomId).child("users").get().await()
+                for (ds in users.getChildren()){
+                    val userId = ds.getValue<String>() ?: ""
+                    val rooms = usersRef.child(userId).child("rooms").get().await()
+                    for (room in rooms.getChildren()){
+                        val _roomId = room.getValue<String>() ?: ""
+                        if (_roomId == roomId){
+                            usersRef.child(userId).child("rooms").child(_roomId).removeValue()
+                        }
+                    }
+                }
+                messagesRoomRef.child(roomId).removeValue()
+                fetchAllUserMessages()
                 fetchAllOffers()
             } catch (e: Exception) {
                 e.printStackTrace()
