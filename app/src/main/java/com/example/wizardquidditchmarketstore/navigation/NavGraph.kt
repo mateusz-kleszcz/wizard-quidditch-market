@@ -14,6 +14,7 @@ import com.example.wizardquidditchmarketstore.screens.MessagesScreen
 import com.example.wizardquidditchmarketstore.screens.OfferDetailsScreen
 import com.example.wizardquidditchmarketstore.screens.OffersListScreen
 import com.example.wizardquidditchmarketstore.screens.ProfileScreen
+import com.example.wizardquidditchmarketstore.screens.SellScreen
 import com.example.wizardquidditchmarketstore.screens.SignUpScreen
 import com.example.wizardquidditchmarketstore.viewModels.AddOffersViewModel
 import com.example.wizardquidditchmarketstore.viewModels.LoginViewModel
@@ -33,7 +34,7 @@ fun NavGraph (
         navController = navController,
         startDestination = Screens.SignIn.route)
     {
-        composable(route = Screens.MRoom.route +  "?id={id}" + "?name={name}") { navBackStack ->
+        composable(route = Screens.MRoom.route + "?id={id}" + "?name={name}") { navBackStack ->
             val id: String = navBackStack.arguments?.getString("id") ?: ""
             val name: String = navBackStack.arguments?.getString("name") ?: ""
             MessageRoom(
@@ -41,6 +42,14 @@ fun NavGraph (
                 firebaseViewModel = firebaseViewModel,
                 room = id,
                 name = name
+            )
+        }
+        composable(route = Screens.SellScreen.route+ "?id={id}"){ navBackStack ->
+            val id: String = navBackStack.arguments?.getString("id") ?: ""
+            SellScreen(
+                navController = navController,
+                firebaseViewModel = firebaseViewModel,
+                offerId = id
             )
         }
         composable(route = Screens.SignIn.route){
@@ -61,7 +70,7 @@ fun NavGraph (
                 firebaseViewModel = firebaseViewModel,
             )
         }
-        composable(route = Screens.OfferDetails.route +  "?id={id}") { navBackStack ->
+        composable(route = Screens.OfferDetails.route + "?id={id}") { navBackStack ->
             val id: String = navBackStack.arguments?.getString("id") ?: ""
             OfferDetailsScreen(
                 navController = navController,
@@ -95,9 +104,14 @@ fun NavGraph (
                 firebaseViewModel = firebaseViewModel,
             )
         }
-        composable(route = Screens.Owl.route){
+        composable(route = Screens.Owl.route + "?id={id}" + "?user={user}"){navBackStack ->
+            val id: String = navBackStack.arguments?.getString("id") ?: ""
+            val userId: String = navBackStack.arguments?.getString("user") ?: ""
             ARScreen(
                 navController = navController,
+                firebaseViewModel = firebaseViewModel,
+                offerId = id,
+                userId = userId
             )
         }
     }

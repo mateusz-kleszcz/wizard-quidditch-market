@@ -2,9 +2,12 @@ package com.example.wizardquidditchmarketstore.screens
 
 import android.view.MotionEvent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +18,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
+import com.example.wizardquidditchmarketstore.navigation.Screens
 import com.google.android.filament.Engine
 import com.google.ar.core.Anchor
 import com.google.ar.core.Config
@@ -41,7 +47,16 @@ import io.github.sceneview.rememberOnGestureListener
 import io.github.sceneview.rememberView
 
 @Composable
-fun ARScreen(navController: NavController,){
+fun ARScreen(
+    navController: NavController,
+    firebaseViewModel: FirebaseViewModel,
+    offerId: String,
+    userId: String
+    )
+{
+    var isSold by remember { mutableStateOf(false) }
+
+    val offerDetails = firebaseViewModel.offerDetails ?: return
 
     var button by remember { mutableStateOf(false) }
 
@@ -111,40 +126,77 @@ fun ARScreen(navController: NavController,){
             }
         )
     )
-
-    Row(
-        modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Button(
-            modifier = Modifier,
-            onClick = {
-
-            },
+    if (isSold){
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text("Back")
+            Text("SOLD")
+            Button(
+                onClick = {navController.navigate(
+                    Screens.OffersList.route
+                )}
+            ) { Text("Exit") }
         }
-        if(button){
-            Button(
-                modifier = Modifier,
-                onClick = {
-                    childNodes.clear()
-                    button = false
-                },
-            ) {
-                Text("Clear")
-            }
-            Button(
-                modifier = Modifier,
-                onClick = {
 
+    }else{
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 30.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Button(
+                modifier = Modifier,
+                onClick = {
+                    navController.navigate(
+                        Screens.OfferDetails.route
+                            .replace(
+                                oldValue = "{id}",
+                                newValue = offerId
+                            )
+                    )
                 },
             ) {
-                Text("Check")
+                Text("Back")
+            }
+            if(button){
+                Button(
+                    modifier = Modifier,
+                    onClick = {
+                        childNodes.clear()
+                        button = false
+                    },
+                ) {
+                    Text("Clear")
+                }
+                Button(
+                    modifier = Modifier,
+                    onClick = {
+                        if(offerDetails.sold==firebaseViewModel.get_auth().currentUser?.uid.toString()){
+                            isSold = true
+                            firebaseViewModel.removeOffer(offerId)
+                        }else{
+                            firebaseViewModel.setBuyer(offerId,userId){
+                                navController.navigate(
+                                    Screens.Profile.route
+                                )
+                            }
+                        }
+
+                    },
+                ) {
+                    Text("Check")
+                }
             }
         }
     }
+
+
 }
 
 fun createAnchorNode(

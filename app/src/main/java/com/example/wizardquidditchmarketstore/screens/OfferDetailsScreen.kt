@@ -113,37 +113,43 @@ fun OfferDetailsScreen(
             }
             val currentUser = firebaseViewModel.get_auth()
             if (offerDetails.userId == currentUser.currentUser?.uid.toString()){
-                if (!offerDetails.isSold) {
-                    Button(
-                        onClick = { firebaseViewModel.sellItem(offerId) }
-                    ) {
-                        Text("Sell item")
-                    }
-                } else {
-                    Button(
-                        onClick = { navController.navigate(Screens.Owl.route) }
-                    ) {
-                        Text("Send Owl")
-                    }
-                }
-            } else {
                 Button(
-                    onClick = {
-                        val userRoom = UsersRoom(
-                            user1 = offerDetails.userId,
-                            user2 = firebaseViewModel.get_auth().currentUser?.uid.toString()
-                        )
-                        firebaseViewModel.saveMessageRoom(userRoom,offerId) { roomId ->
-                            // Navigate to the chat screen once the room is saved
-                            navController.navigate(
-                                Screens.MRoom.route
-                                    .replace("{id}", roomId)
-                                    .replace(oldValue = "{name}",newValue = offerDetails.name)
-                            )
-                        }
-                    }
+                    onClick = { navController.navigate(
+                        Screens.SellScreen.route
+                            .replace(oldValue = "{id}", newValue = offerId)) }
                 ) {
-                    Text("Send Message")
+                    Text("Send Owl")
+                }
+
+            } else {
+                if(offerDetails.sold==firebaseViewModel.get_auth().currentUser?.uid.toString()){
+                    Button(
+                        onClick = { navController.navigate(
+                            Screens.Owl.route
+                                .replace(oldValue = "{id}",newValue =  offerId)
+                                .replace(oldValue = "{user}", newValue = "")
+                        ) }
+                    ) {
+                        Text("Receive Item")
+                    }
+                }else{
+                    Button(
+                        onClick = {
+                            val userRoom = UsersRoom(
+                                user1 = offerDetails.userId,
+                                user2 = firebaseViewModel.get_auth().currentUser?.uid.toString()
+                            )
+                            firebaseViewModel.saveMessageRoom(userRoom,offerId) { roomId ->
+                                navController.navigate(
+                                    Screens.MRoom.route
+                                        .replace(oldValue = "{id}",newValue =  roomId)
+                                        .replace(oldValue = "{name}",newValue = offerDetails.name)
+                                )
+                            }
+                        }
+                    ) {
+                        Text("Send Message")
+                    }
                 }
             }
             GoogleMapFeature(offerDetails.latitude, offerDetails.longitude)

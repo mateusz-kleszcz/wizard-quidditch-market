@@ -27,5 +27,12 @@ data class OfferDetails(
     val longitude: Double,
     val latitude: Double,
     val date: String,
-    val isSold: Boolean,
+    val buyers: ArrayList<OfferBuyers>? = null,
+    val sold: String? = null
+)
+
+data class OfferBuyers(
+    val name:String,
+    val userId:String,
+    val roomId:String? = null
 )

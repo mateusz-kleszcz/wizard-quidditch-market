@@ -221,7 +221,7 @@ class FirebaseViewModel(): ViewModel() {
                 val longitude = snapshot.child("longitude").getValue<Double>() ?: 0.0
                 val date = snapshot.child("date").getValue<String>() ?: ""
                 val userId = snapshot.child("userId").getValue<String>() ?: ""
-                val isSold = snapshot.child("isSold").getValue<Boolean>() ?: false
+                val sold = snapshot.child("sold").getValue<String>() ?: ""
                 var isUserFavourite = false
                 val favouritesSnapshot = usersRef
                     .child(auth.currentUser?.uid.toString())
@@ -234,6 +234,22 @@ class FirebaseViewModel(): ViewModel() {
                         isUserFavourite = true
                     }
                 }
+                var buyers = ArrayList<OfferBuyers>()
+                val buyersSnapshot = itemsRef
+                    .child(id)
+                    .child("buyers")
+                    .get()
+                    .await()
+                for(ds in buyersSnapshot.getChildren()){
+                    val roomId = ds.child("roomId").getValue<String>() ?: ""
+                    val userName = ds.child("name").getValue<String>() ?: ""
+                    val userId = ds.child("userId").getValue<String>() ?: ""
+                    buyers.add(OfferBuyers(
+                        name = userName,
+                        userId = userId,
+                        roomId = roomId
+                    ))
+                }
                 offerDetails = OfferDetails(
                     name,
                     imgSrc,
@@ -244,7 +260,8 @@ class FirebaseViewModel(): ViewModel() {
                     longitude,
                     latitude,
                     date,
-                    isSold,
+                    buyers,
+                    sold
                 )
             } catch (e: Exception) {
                 Log.d("ERROR", e.toString())
@@ -267,7 +284,6 @@ class FirebaseViewModel(): ViewModel() {
                     date = offerSave.date,
                     userId = auth.currentUser?.uid.toString(),
                     isUserFavourite = false,
-                    isSold = false,
                 )
                 newItemRef.setValue(offerDetails).await()
                 fetchAllOffers()
@@ -311,28 +327,20 @@ class FirebaseViewModel(): ViewModel() {
                 )
                 newItemRef.setValue(messageRoom).await()
 
+                val newBuyer = itemsRef.child(offerId).child("buyers").push()
+                val buyers = OfferBuyers(
+                    userRoom.user2,
+                    userRoom.user2,
+                    newItemRef.key
+                )
+
                 usersRef.child(userRoom.user1).child("rooms").push().setValue(newItemRef.key).await()
                 usersRef.child(userRoom.user2).child("rooms").push().setValue(newItemRef.key).await()
 
-                itemsRef.child(offerId).child("rooms").push().setValue(newItemRef.key).await()
+                newBuyer.setValue(buyers).await()
 
                 onRoomSaved(newItemRef.key ?: "")
 
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    fun sellItem(offerId: String) {
-        viewModelScope.launch {
-            try {
-                itemsRef
-                    .child(offerId)
-                    .child("isSold")
-                    .setValue(true)
-                    .await()
-                fetchOfferDetails(offerId)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -345,6 +353,33 @@ class FirebaseViewModel(): ViewModel() {
 
     fun getMessagesRef(id:String): DatabaseReference {
         return messagesRoomRef.child(id).child("messages")
+    }
+
+    fun setBuyer(offerId: String, userId: String, function: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                itemsRef
+                    .child(offerId)
+                    .child("sold")
+                    .setValue(userId)
+                    .await()
+                fetchOfferDetails(offerId)
+                function()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun removeOffer(offerId: String) {
+        viewModelScope.launch {
+            try {
+                itemsRef.child(offerId).removeValue()
+                fetchAllOffers()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
 
