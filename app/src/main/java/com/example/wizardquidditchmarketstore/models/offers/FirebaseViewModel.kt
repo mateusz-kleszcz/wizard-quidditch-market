@@ -12,6 +12,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -19,6 +22,10 @@ import kotlinx.coroutines.tasks.await
 class FirebaseViewModel(): ViewModel() {
     private var db = Firebase.database
     private var auth = Firebase.auth
+
+    private var storage = FirebaseStorage.getInstance()
+    private var storageRef = storage.reference
+
     private var itemsRef = db.getReference("Offers")
     private var usersRef = db.getReference("Users")
     private var messagesRoomRef = db.getReference("MessagesRoom")
@@ -274,19 +281,29 @@ class FirebaseViewModel(): ViewModel() {
         viewModelScope.launch {
             try {
                 val newItemRef = itemsRef.push()
-                val offerDetails = OfferDetails(
-                    name = offerSave.name,
-                    imgSrc = offerSave.imgSrc,
-                    price = offerSave.price,
-                    description = offerSave.description,
-                    latitude = offerSave.latitude,
-                    longitude = offerSave.longitude,
-                    date = offerSave.date,
-                    userId = auth.currentUser?.uid.toString(),
-                    isUserFavourite = false,
-                )
-                newItemRef.setValue(offerDetails).await()
-                fetchAllOffers()
+                val photoRef = storageRef.child("photos/${System.currentTimeMillis()}.jpg")
+                Log.d("IMG SRC", offerSave.imgSrc.toString())
+                val uploadTask = photoRef.putFile(offerSave.imgSrc)
+                uploadTask.addOnSuccessListener {
+                    photoRef.downloadUrl.addOnSuccessListener { uri ->
+                        println("Photo uploaded successfully. Download URL: $uri")
+                        val offerDetails = OfferDetails(
+                            name = offerSave.name,
+                            imgSrc = uri.toString(),
+                            price = offerSave.price,
+                            description = offerSave.description,
+                            latitude = offerSave.latitude,
+                            longitude = offerSave.longitude,
+                            date = offerSave.date,
+                            userId = auth.currentUser?.uid.toString(),
+                            isUserFavourite = false,
+                        )
+                        newItemRef.setValue(offerDetails)
+                        fetchAllOffers()
+                    }
+                }.addOnFailureListener { exception ->
+                    println("Photo upload failed: ${exception.message}")
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }

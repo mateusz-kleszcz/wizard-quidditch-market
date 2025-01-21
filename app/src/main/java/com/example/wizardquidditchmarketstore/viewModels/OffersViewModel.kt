@@ -1,11 +1,12 @@
 package com.example.wizardquidditchmarketstore.viewModels
 
+import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.wizardquidditchmarketstore.models.offers.OfferDetailsSave
 
 class AddOffersViewModel : ViewModel() {
-    var uiState = mutableStateOf(OfferDetailsSave("", "", 0, "", 0.0, 0.0, ""))
+    var uiState = mutableStateOf(OfferDetailsSave("", Uri.EMPTY, 0, "", 0.0, 0.0, ""))
         private set
 
     private val name
@@ -21,7 +22,7 @@ class AddOffersViewModel : ViewModel() {
         uiState.value = uiState.value.copy(name = newValue)
     }
 
-    fun onImgSrcChange(newValue: String) {
+    fun onImgSrcChange(newValue: Uri) {
         uiState.value = uiState.value.copy(imgSrc = newValue)
     }
 

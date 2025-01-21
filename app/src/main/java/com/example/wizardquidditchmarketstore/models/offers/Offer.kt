@@ -1,5 +1,7 @@
 package com.example.wizardquidditchmarketstore.models.offers
 
+import android.net.Uri
+
 data class Offer(
     val id: String,
     val name: String,
@@ -9,7 +11,7 @@ data class Offer(
 
 data class OfferDetailsSave(
     val name: String,
-    val imgSrc: String,
+    val imgSrc: Uri,
     val price: Int,
     val description: String,
     val longitude: Double,

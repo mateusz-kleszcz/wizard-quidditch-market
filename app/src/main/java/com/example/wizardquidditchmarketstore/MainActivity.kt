@@ -24,6 +24,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.example.wizardquidditchmarketstore.common.CameraCompose
 import com.google.android.gms.location.LocationServices
 
 class MainActivity : ComponentActivity() {
