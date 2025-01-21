@@ -27,4 +27,17 @@ class LoginViewModel: ViewModel() {
             Log.d("ERROR", e.toString())
         }
     }
+
+    fun singOut(onResult: () -> Unit) {
+        try {
+            Firebase.auth.signOut()
+            onResult()
+        } catch(e: Error) {
+            Log.d("ERROR", e.toString())
+        }
+    }
+
+    fun getIsUserSignedIn(): Boolean {
+        return Firebase.auth.currentUser != null
+    }
 }

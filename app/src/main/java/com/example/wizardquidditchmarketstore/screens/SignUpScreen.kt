@@ -31,7 +31,6 @@ fun SignUpScreen(
         uiState = uiState,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
-        onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
         onSignUpClick = viewModel::onSignUpClick,
         navController = navController
     )
@@ -43,7 +42,6 @@ fun SignUpScreenContent(
     uiState: SignUpUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onRepeatPasswordChange: (String) -> Unit,
     onSignUpClick: (onResult: (Throwable?) -> Unit) -> Unit,
     navController: NavController
 ) {
@@ -58,18 +56,19 @@ fun SignUpScreenContent(
 
         EmailField(uiState.email, onEmailChange)
         PasswordField(uiState.password, onPasswordChange)
-        RepeatPasswordField(uiState.repeatPassword, onRepeatPasswordChange)
-        Button(onClick= { onSignUpClick { error ->
-            if (error == null) {
-                navController.navigate(Screens.OffersList.route)
-            } else {
-                Log.d("ERROR", "ERROR")
+        Row() {
+            Button(onClick= { onSignUpClick { error ->
+                if (error == null) {
+                    navController.navigate(Screens.OffersList.route)
+                } else {
+                    Log.d("ERROR", "ERROR")
+                }
+            } }) {
+                Text(stringResource(AppText.sign_up))
             }
-        } }) {
-            Text(stringResource(AppText.sign_up))
-        }
-        Button(onClick={ navController.navigate(Screens.SignIn.route) }) {
-            Text(stringResource(AppText.sign_in))
+            Button(onClick={ navController.navigate(Screens.SignIn.route) }) {
+                Text(stringResource(AppText.sign_in))
+            }
         }
     }
 }

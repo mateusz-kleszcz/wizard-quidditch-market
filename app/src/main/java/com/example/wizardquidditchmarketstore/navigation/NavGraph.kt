@@ -30,9 +30,15 @@ fun NavGraph (
     firebaseViewModel: FirebaseViewModel,
     fusedLocationClient: FusedLocationProviderClient,
 ){
+    val startDestination =
+        if (loginViewModel.getIsUserSignedIn())
+            Screens.OffersList.route
+        else
+            Screens.SignIn.route
+
     NavHost(
         navController = navController,
-        startDestination = Screens.SignIn.route)
+        startDestination = startDestination)
     {
         composable(route = Screens.MRoom.route + "?id={id}" + "?name={name}") { navBackStack ->
             val id: String = navBackStack.arguments?.getString("id") ?: ""
@@ -96,6 +102,7 @@ fun NavGraph (
             ProfileScreen(
                 navController = navController,
                 firebaseViewModel = firebaseViewModel,
+                authViewModel = loginViewModel
             )
         }
         composable(route = Screens.Messages.route){

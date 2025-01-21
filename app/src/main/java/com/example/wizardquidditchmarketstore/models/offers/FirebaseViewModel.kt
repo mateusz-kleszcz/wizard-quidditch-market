@@ -13,8 +13,6 @@ import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -34,7 +32,7 @@ class FirebaseViewModel(): ViewModel() {
     var favourtiesOffersList by mutableStateOf(ArrayList<Offer>())
     var userOffersList by mutableStateOf(ArrayList<Offer>())
     var offerDetails by mutableStateOf<OfferDetails?>(null)
-    var userNotifications by mutableStateOf(false)
+    var userNick by mutableStateOf("")
 
     var userMessages by mutableStateOf(ArrayList<MessageItem>())
 
@@ -192,9 +190,8 @@ class FirebaseViewModel(): ViewModel() {
         viewModelScope.launch {
             try {
                 val userId = auth.currentUser?.uid.toString()
-                val snapshot = usersRef.child(userId).child("notifications").get().await()
-                val notifications = snapshot.getValue<Boolean>() ?: false
-                userNotifications = notifications
+                val snapshot = usersRef.child(userId).child("nick").get().await()
+                userNick = snapshot.getValue<String>() ?: ""
             } catch (e: Exception) {
                 Log.d("ERROR", e.toString())
                 e.printStackTrace()
@@ -202,13 +199,12 @@ class FirebaseViewModel(): ViewModel() {
         }
     }
 
-    fun updateUserSettings() {
+    fun updateUserSettings(nick: String) {
         viewModelScope.launch {
             try {
                 val userId = auth.currentUser?.uid.toString()
-                val notificationsRef = usersRef.child(userId).child("notifications")
-                notificationsRef.setValue(!userNotifications).await()
-                userNotifications = !userNotifications
+                val nickRef = usersRef.child(userId).child("nick")
+                nickRef.setValue(nick).await()
             } catch (e: Exception) {
                 Log.d("ERROR", e.toString())
                 e.printStackTrace()

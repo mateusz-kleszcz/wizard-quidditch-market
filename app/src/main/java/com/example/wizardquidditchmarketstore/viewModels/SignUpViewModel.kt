@@ -27,12 +27,10 @@ class SignUpViewModel @Inject constructor(
         uiState.value = uiState.value.copy(password = newValue)
     }
 
-    fun onRepeatPasswordChange(newValue: String) {
-        uiState.value = uiState.value.copy(repeatPassword = newValue)
-    }
-
     fun onSignUpClick(onResult: (Throwable?) -> Unit) {
-        Firebase.auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { onResult(it.exception) }
+        if (email != "" && password != "") {
+            Firebase.auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { onResult(it.exception) }
+        }
     }
 }

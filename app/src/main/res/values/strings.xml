@@ -5,6 +5,8 @@
     <string name="repeat_password_placeholder">Repeat password</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="update_user_nick">Update</string>
     <string name="offers_list">Offers List</string>
     <string name="add_offer">Add offer</string>
     <string name="favourites">Favourites</string>
@@ -12,4 +14,5 @@
     <string name="description">Description</string>
     <string name="messages">Messages</string>
     <string name="price_label">Price: </string>
+    <string name="my_offers_label">My offers </string>
 </resources>
