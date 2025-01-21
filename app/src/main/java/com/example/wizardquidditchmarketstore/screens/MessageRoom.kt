@@ -1,11 +1,13 @@
 package com.example.wizardquidditchmarketstore.screens
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -48,22 +50,32 @@ fun MessageRoom(
 
     DisposableEffect(Unit) {
         onDispose {
-            chatViewModel.onCleared() // Clear ViewModel explicitly when leaving
+            chatViewModel.onCleared()
         }
     }
     Scaffold(
         topBar = { WizardNavigationBar(navController) }
     ) { innerPadding ->
         Column(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(top = 132.dp)
-                .padding(horizontal = 16.dp)
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            MessageList(messages.value,name)
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.h5,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+                MessageList(messages.value)
+            }
+
             MessageInput { message ->
                 chatViewModel.sendMessage(message)
             }
@@ -72,22 +84,29 @@ fun MessageRoom(
 }
 
 @Composable
-fun MessageList(messages: List<MessagesDetails>,name: String) {
-    val scrollState = rememberScrollState()
+fun MessageList(messages: List<MessagesDetails>) {
 
     Column(
+        horizontalAlignment = Alignment.Start,
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(8.dp)
     ) {
-        Text(text = name)
+
         if(messages!=null){
             messages.forEach { message ->
                 Text(
-                    text = "${message.name}: ${message.text}",
+                    text = "${message.name}:",
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier.padding(4.dp)
                 )
+                Text(
+                    text = "${message.text}",
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.padding(4.dp)
+                )
+
+
             }
         }
 
@@ -102,14 +121,17 @@ fun MessageInput(onSend: (String) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom
     ) {
         BasicTextField(
             value = message,
             onValueChange = { message = it },
             modifier = Modifier
                 .weight(1f)
-                .padding(end = 8.dp),
+                .padding(end = 8.dp)
+                .border(1.dp, MaterialTheme.colors.primary, MaterialTheme.shapes.small)
+                .padding(8.dp),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
             keyboardActions = KeyboardActions(onSend = {
                 if (message.isNotEmpty()) {
