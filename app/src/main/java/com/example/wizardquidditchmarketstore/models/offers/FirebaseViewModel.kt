@@ -374,21 +374,34 @@ class FirebaseViewModel(): ViewModel() {
     fun removeOffer(offerId: String, roomId: String) {
         viewModelScope.launch {
             try {
-                itemsRef.child(offerId).removeValue()
                 val users = messagesRoomRef.child(roomId).child("users").get().await()
-                for (ds in users.getChildren()){
-                    val userId = ds.getValue<String>() ?: ""
-                    val rooms = usersRef.child(userId).child("rooms").get().await()
-                    for (room in rooms.getChildren()){
-                        val _roomId = room.getValue<String>() ?: ""
-                        if (_roomId == roomId){
-                            usersRef.child(userId).child("rooms").child(_roomId).removeValue()
-                        }
-                    }
-                }
+                val user1 = users.child("user1").getValue<String>() ?: ""
+                val user2 = users.child("user2").getValue<String>() ?: ""
+                removeRoomUser(user1,roomId)
+                removeRoomUser(user2,roomId)
+                itemsRef.child(offerId).removeValue()
                 messagesRoomRef.child(roomId).removeValue()
                 fetchAllUserMessages()
                 fetchAllOffers()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun removeRoomUser(user: String, roomId: String) {
+        viewModelScope.launch {
+            try {
+                val snapshot = usersRef.child(user).child("rooms").get().await()
+                var idRemove = ""
+                for(ds in snapshot.getChildren()){
+                    val id = ds.getValue<String>() ?: ""
+                    if (id == roomId){
+                        idRemove = ds.key ?: ""
+                        break
+                    }
+                }
+                usersRef.child(user).child("rooms").child(idRemove).removeValue()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
