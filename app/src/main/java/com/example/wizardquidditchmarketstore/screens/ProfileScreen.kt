@@ -99,10 +99,12 @@ fun ProfileScreen(
                         onNewValue = { firebaseViewModel.userNick = it },
                         placeholder = "Your nick",
                         modifier
-                            .width(240.dp)
-                            .padding(end = 24.dp)
+                            .width(220.dp)
+                            .padding(end = 20.dp)
                     )
                     Button(
+                        modifier = Modifier
+                            .padding(vertical = 20.dp),
                         onClick = { firebaseViewModel.updateUserSettings(firebaseViewModel.userNick) },
                     ) {
                         Text(stringResource(R.string.update_user_nick))

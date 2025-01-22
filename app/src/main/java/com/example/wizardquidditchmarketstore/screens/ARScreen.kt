@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.wizardquidditchmarketstore.models.offers.FirebaseViewModel
 import com.example.wizardquidditchmarketstore.navigation.Screens
@@ -132,7 +133,10 @@ fun ARScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("SOLD")
+            Text("SOLD",
+                fontSize = 24.sp,
+                color = Color.White
+                )
             Button(
                 onClick = {navController.navigate(
                     Screens.OffersList.route
@@ -187,7 +191,7 @@ fun ARScreen(
                         }else{
                             firebaseViewModel.setBuyer(offerId,userId){
                                 navController.navigate(
-                                    Screens.Profile.route
+                                    Screens.OffersList.route
                                 )
                             }
                         }

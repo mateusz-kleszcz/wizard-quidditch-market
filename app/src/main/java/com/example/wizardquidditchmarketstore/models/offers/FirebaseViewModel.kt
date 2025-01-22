@@ -292,7 +292,7 @@ class FirebaseViewModel(): ViewModel() {
                     .child("nick")
                     .get()
                     .await()
-                    .getValue<String>() ?: "Ola"
+                    .getValue<String>() ?: "guest"
                 uploadTask.addOnSuccessListener {
                     photoRef.downloadUrl.addOnSuccessListener { uri ->
                         val offerDetails = OfferDetails(
