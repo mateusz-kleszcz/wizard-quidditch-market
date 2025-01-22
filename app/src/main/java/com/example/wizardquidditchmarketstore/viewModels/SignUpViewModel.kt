@@ -1,5 +1,6 @@
 package com.example.wizardquidditchmarketstore.viewModels
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.wizardquidditchmarketstore.models.SignUpUiState
@@ -18,6 +19,8 @@ class SignUpViewModel @Inject constructor(
         get() = uiState.value.email
     private val password
         get() = uiState.value.password
+    private val errorState
+        get() = uiState.value.errorState
 
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
@@ -27,10 +30,23 @@ class SignUpViewModel @Inject constructor(
         uiState.value = uiState.value.copy(password = newValue)
     }
 
-    fun onSignUpClick(onResult: (Throwable?) -> Unit) {
-        if (email != "" && password != "") {
+    fun onSignUpClick(onResult: () -> Unit) {
+        if (email == "") {
+            uiState.value = uiState.value.copy(errorState = "You need to provide an email")
+        }
+        else if (password == "") {
+            uiState.value = uiState.value.copy(errorState = "You need to provide a password")
+        } else {
             Firebase.auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { onResult(it.exception) }
+                .addOnSuccessListener {
+                    uiState.value = uiState.value.copy(email = "")
+                    uiState.value = uiState.value.copy(password = "")
+                    uiState.value = uiState.value.copy(errorState = "")
+                    onResult()
+                }
+                .addOnFailureListener { error ->
+                    uiState.value = uiState.value.copy(errorState = error.message.toString())
+                }
         }
     }
 }

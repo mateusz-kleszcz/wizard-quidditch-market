@@ -28,6 +28,7 @@ import com.example.wizardquidditchmarketstore.common.CameraCompose
 import com.example.wizardquidditchmarketstore.common.NumberField
 import com.example.wizardquidditchmarketstore.common.WizardNavigationBar
 import com.example.wizardquidditchmarketstore.models.offers.OfferDetailsSave
+import com.example.wizardquidditchmarketstore.navigation.Screens
 import com.example.wizardquidditchmarketstore.viewModels.AddOffersViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.datetime.Clock
@@ -46,7 +47,7 @@ fun AddOfferScreen(
     navController: NavController,
     viewModel: AddOffersViewModel,
     modifier: Modifier = Modifier,
-    onCreateOffer: (offer: OfferDetailsSave) -> Unit,
+    onCreateOffer: (offer: OfferDetailsSave, onResult: () -> Unit) -> Unit,
     fusedLocationClient: FusedLocationProviderClient,
 ) {
     val uiState by viewModel.uiState
@@ -102,14 +103,15 @@ fun AddOfferScreen(
                         longitude,
                         latitude,
                         currentDate.toString(),
-                    )
+                    ),
+                    { navController.navigate(Screens.OffersList.route) }
                 )
             }) {
                 Text(stringResource(AppText.add_offer))
             }
-            if (uiState.imgSrc.path?.isNotEmpty() == true) {
+            if (uri.path?.isNotEmpty() == true) {
                 AsyncImage(
-                    model = uiState.imgSrc,
+                    model = uri,
                     contentDescription = "photo",
                     modifier = Modifier
                         .size(300.dp)

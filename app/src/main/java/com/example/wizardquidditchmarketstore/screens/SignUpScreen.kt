@@ -6,14 +6,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.wizardquidditchmarketstore.common.EmailField
 import com.example.wizardquidditchmarketstore.common.PasswordField
-import com.example.wizardquidditchmarketstore.common.RepeatPasswordField
 import com.example.wizardquidditchmarketstore.models.SignUpUiState
 import com.example.wizardquidditchmarketstore.navigation.Screens
 import com.example.wizardquidditchmarketstore.viewModels.SignUpViewModel
@@ -42,7 +44,7 @@ fun SignUpScreenContent(
     uiState: SignUpUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onSignUpClick: (onResult: (Throwable?) -> Unit) -> Unit,
+    onSignUpClick: (onResult: () -> Unit) -> Unit,
     navController: NavController
 ) {
     Column(
@@ -53,22 +55,27 @@ fun SignUpScreenContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        EmailField(uiState.email, onEmailChange)
-        PasswordField(uiState.password, onPasswordChange)
-        Row() {
-            Button(onClick= { onSignUpClick { error ->
-                if (error == null) {
-                    navController.navigate(Screens.OffersList.route)
-                } else {
-                    Log.d("ERROR", "ERROR")
-                }
-            } }) {
-                Text(stringResource(AppText.sign_up))
-            }
-            Button(onClick={ navController.navigate(Screens.SignIn.route) }) {
-                Text(stringResource(AppText.sign_in))
-            }
+        EmailField(
+            uiState.email,
+            onEmailChange,
+            modifier = modifier.padding(bottom = 24.dp)
+        )
+        PasswordField(
+            uiState.password,
+            onPasswordChange,
+            modifier = modifier.padding(bottom = 24.dp)
+        )
+        Button(onClick= { onSignUpClick {
+            navController.navigate(Screens.OffersList.route)
+        } }) {
+            Text(stringResource(AppText.sign_up))
         }
+        TextButton(onClick={ navController.navigate(Screens.SignIn.route) }) {
+            Text(stringResource(AppText.sign_in))
+        }
+        Text(
+            uiState.errorState,
+            color = Color.Red
+        )
     }
 }

@@ -19,12 +19,23 @@ class LoginViewModel: ViewModel() {
         uiState.value = uiState.value.copy(password = newValue)
     }
 
-    fun login(onResult: (Throwable?) -> Unit) {
-        try {
+    fun login(onResult: () -> Unit) {
+        if (uiState.value.email == "") {
+            uiState.value = uiState.value.copy(errorState = "You need to provide an email")
+        }
+        else if (uiState.value.password == "") {
+            uiState.value = uiState.value.copy(errorState = "You need to provide a password")
+        } else {
             Firebase.auth.signInWithEmailAndPassword(uiState.value.email, uiState.value.password)
-                .addOnCompleteListener { onResult(it.exception) }
-        } catch(e: Error) {
-            Log.d("ERROR", e.toString())
+                .addOnSuccessListener {
+                    uiState.value = uiState.value.copy(email = "")
+                    uiState.value = uiState.value.copy(password = "")
+                    uiState.value = uiState.value.copy(errorState = "")
+                    onResult()
+                }
+                .addOnFailureListener { error ->
+                    uiState.value = uiState.value.copy(errorState = error.message.toString())
+                }
         }
     }
 

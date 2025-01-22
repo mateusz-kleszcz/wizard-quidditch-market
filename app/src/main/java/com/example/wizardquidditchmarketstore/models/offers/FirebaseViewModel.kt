@@ -273,7 +273,10 @@ class FirebaseViewModel(): ViewModel() {
         }
     }
 
-    fun saveOffer(offerSave: OfferDetailsSave) {
+    fun saveOffer(
+        offerSave: OfferDetailsSave,
+        onResult: () -> Unit,
+    ) {
         viewModelScope.launch {
             try {
                 val newItemRef = itemsRef.push()
@@ -282,7 +285,6 @@ class FirebaseViewModel(): ViewModel() {
                 val uploadTask = photoRef.putFile(offerSave.imgSrc)
                 uploadTask.addOnSuccessListener {
                     photoRef.downloadUrl.addOnSuccessListener { uri ->
-                        println("Photo uploaded successfully. Download URL: $uri")
                         val offerDetails = OfferDetails(
                             name = offerSave.name,
                             imgSrc = uri.toString(),
@@ -295,7 +297,7 @@ class FirebaseViewModel(): ViewModel() {
                             isUserFavourite = false,
                         )
                         newItemRef.setValue(offerDetails)
-                        fetchAllOffers()
+                        onResult()
                     }
                 }.addOnFailureListener { exception ->
                     println("Photo upload failed: ${exception.message}")
