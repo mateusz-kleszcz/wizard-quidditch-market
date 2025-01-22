@@ -191,8 +191,8 @@ class FirebaseViewModel(): ViewModel() {
         viewModelScope.launch {
             try {
                 val userId = auth.currentUser?.uid.toString()
-                val snapshot = usersRef.child(userId).child("nick").get().await()
-                userNick = snapshot.getValue<String>() ?: ""
+                val snapshot = usersRef.child(userId).get().await()
+                userNick = snapshot.child("nick").getValue<String>() ?: "guest"
             } catch (e: Exception) {
                 Log.d("ERROR", e.toString())
                 e.printStackTrace()
@@ -227,7 +227,7 @@ class FirebaseViewModel(): ViewModel() {
                 val date = snapshot.child("date").getValue<String>() ?: ""
                 val userId = snapshot.child("userId").getValue<String>() ?: ""
                 val sold = snapshot.child("sold").getValue<String>() ?: ""
-                val userName = snapshot.child("sold").getValue<String>() ?: "guest"
+                val userName = snapshot.child("userName").getValue<String>() ?: "guest"
                 var isUserFavourite = false
                 val favouritesSnapshot = usersRef
                     .child(auth.currentUser?.uid.toString())
@@ -287,6 +287,12 @@ class FirebaseViewModel(): ViewModel() {
                 val photoRef = storageRef.child("photos/${System.currentTimeMillis()}.jpg")
                 Log.d("IMG SRC", offerSave.imgSrc.toString())
                 val uploadTask = photoRef.putFile(offerSave.imgSrc)
+                val userName = usersRef
+                    .child(auth.currentUser?.uid.toString())
+                    .child("nick")
+                    .get()
+                    .await()
+                    .getValue<String>() ?: "Ola"
                 uploadTask.addOnSuccessListener {
                     photoRef.downloadUrl.addOnSuccessListener { uri ->
                         val offerDetails = OfferDetails(
@@ -299,7 +305,7 @@ class FirebaseViewModel(): ViewModel() {
                             date = offerSave.date,
                             userId = auth.currentUser?.uid.toString(),
                             isUserFavourite = false,
-                            userName = userNick
+                            userName = userName
                         )
                         newItemRef.setValue(offerDetails)
                         onResult()
