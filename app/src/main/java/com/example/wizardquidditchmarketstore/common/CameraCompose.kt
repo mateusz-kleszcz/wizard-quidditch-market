@@ -20,7 +20,9 @@ fun CameraCompose(
     val context = LocalContext.current
 
     val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {}
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+            onImgSrcChange(imgSrc)
+        }
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) {
@@ -30,7 +32,6 @@ fun CameraCompose(
         val permissionCheckResult =
             ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA)
         if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-            onImgSrcChange(imgSrc)
             cameraLauncher.launch(imgSrc)
         } else {
             permissionLauncher.launch(android.Manifest.permission.CAMERA)

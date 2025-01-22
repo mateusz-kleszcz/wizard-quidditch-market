@@ -3,6 +3,7 @@ package com.example.wizardquidditchmarketstore.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -99,12 +100,16 @@ fun AddOfferScreen(
                         latitude,
                         currentDate.toString(),
                     ),
-                    { navController.navigate(Screens.OffersList.route) }
+                    {
+                        viewModel.clearData()
+                        navController.navigate(Screens.OffersList.route)
+                    }
                 )
             }) {
                 Text(stringResource(AppText.add_offer))
             }
             if (uiState.imgSrc.path?.isNotEmpty() == true) {
+                Log.d("uiState.imgSrc", uri.toString())
                 AsyncImage(
                     model = uiState.imgSrc,
                     contentDescription = "photo",

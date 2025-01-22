@@ -33,4 +33,11 @@ class AddOffersViewModel : ViewModel() {
     fun onDescriptionChange(newValue: String) {
         uiState.value = uiState.value.copy(description = newValue)
     }
+
+    fun clearData() {
+        uiState.value = uiState.value.copy(name = "")
+        uiState.value = uiState.value.copy(imgSrc = Uri.EMPTY)
+        uiState.value = uiState.value.copy(price = 0)
+        uiState.value = uiState.value.copy(description = "")
+    }
 }
