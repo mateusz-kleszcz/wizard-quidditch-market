@@ -45,8 +45,9 @@ fun MessageRoom(
     modifier: Modifier = Modifier,
 ) {
     val chatViewModel = ChatViewModel(room,firebaseViewModel)
-
     val messages = chatViewModel.currentRoom.collectAsState()
+
+    val nick = firebaseViewModel.userNick
 
     DisposableEffect(Unit) {
         onDispose {

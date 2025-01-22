@@ -66,7 +66,7 @@ class ChatViewModel(
     }
 
     fun sendMessage(text: String) {
-        val message = MessagesDetails(name = firebase.get_auth().currentUser?.uid.toString() , text = text)
+        val message = MessagesDetails(name = firebase.userNick , text = text)
         database.push().setValue(message)
     }
 

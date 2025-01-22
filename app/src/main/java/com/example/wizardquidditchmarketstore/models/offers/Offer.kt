@@ -30,7 +30,8 @@ data class OfferDetails(
     val latitude: Double,
     val date: String,
     val buyers: ArrayList<OfferBuyers>? = null,
-    val sold: String? = null
+    val sold: String? = null,
+    val userName: String
 )
 
 data class OfferBuyers(

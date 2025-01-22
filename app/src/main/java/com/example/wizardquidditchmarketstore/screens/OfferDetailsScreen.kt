@@ -83,6 +83,7 @@ fun OfferDetailsScreen(
                     )
                     Text(stringResource(R.string.price_label) + offerDetails.price.toString())
                     Text(offerDetails.date)
+                    Text("Seller: "+ offerDetails.userName)
                     if (offerDetails.isUserFavourite) {
                         IconButton(
                             onClick = { firebaseViewModel.removeFromFavourites(offerId) },

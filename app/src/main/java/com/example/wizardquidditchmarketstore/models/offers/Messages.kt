@@ -21,5 +21,6 @@ data class UsersRoom(
 data class MessageItem(
     val name: String,
     val room: String,
-    val user: String
+    val user: String,
+    val userName: String
 )

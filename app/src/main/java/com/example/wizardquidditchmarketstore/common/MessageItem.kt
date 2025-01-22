@@ -56,7 +56,7 @@ fun MessageItem(
                 .fillMaxSize()
         ) {
             Text(
-                "${messageItem.name}|${messageItem.user}",
+                "${messageItem.name} | ${messageItem.userName}",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier

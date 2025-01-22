@@ -32,7 +32,7 @@ class FirebaseViewModel(): ViewModel() {
     var favourtiesOffersList by mutableStateOf(ArrayList<Offer>())
     var userOffersList by mutableStateOf(ArrayList<Offer>())
     var offerDetails by mutableStateOf<OfferDetails?>(null)
-    var userNick by mutableStateOf("")
+    var userNick by mutableStateOf("guest")
 
     var userMessages by mutableStateOf(ArrayList<MessageItem>())
 
@@ -55,7 +55,8 @@ class FirebaseViewModel(): ViewModel() {
                     }
                     val itemId = messagesRoomRef.child(id).get().await().child("itemId").getValue<String>() ?: ""
                     val name = itemsRef.child(itemId).get().await().child("name").getValue<String>() ?: ""
-                    val room = MessageItem(name,id,user)
+                    val userName = usersRef.child(user).child("nick").get().await().getValue<String>() ?: "guest"
+                    val room = MessageItem(name,id,user,userName)
                     messages.add(room)
                 }
                 userMessages = messages
@@ -205,6 +206,7 @@ class FirebaseViewModel(): ViewModel() {
                 val userId = auth.currentUser?.uid.toString()
                 val nickRef = usersRef.child(userId).child("nick")
                 nickRef.setValue(nick).await()
+                fetchUserSettings()
             } catch (e: Exception) {
                 Log.d("ERROR", e.toString())
                 e.printStackTrace()
@@ -225,6 +227,7 @@ class FirebaseViewModel(): ViewModel() {
                 val date = snapshot.child("date").getValue<String>() ?: ""
                 val userId = snapshot.child("userId").getValue<String>() ?: ""
                 val sold = snapshot.child("sold").getValue<String>() ?: ""
+                val userName = snapshot.child("sold").getValue<String>() ?: "guest"
                 var isUserFavourite = false
                 val favouritesSnapshot = usersRef
                     .child(auth.currentUser?.uid.toString())
@@ -264,7 +267,8 @@ class FirebaseViewModel(): ViewModel() {
                     latitude,
                     date,
                     buyers,
-                    sold
+                    sold,
+                    userName
                 )
             } catch (e: Exception) {
                 Log.d("ERROR", e.toString())
@@ -295,6 +299,7 @@ class FirebaseViewModel(): ViewModel() {
                             date = offerSave.date,
                             userId = auth.currentUser?.uid.toString(),
                             isUserFavourite = false,
+                            userName = userNick
                         )
                         newItemRef.setValue(offerDetails)
                         onResult()
@@ -344,7 +349,7 @@ class FirebaseViewModel(): ViewModel() {
 
                 val newBuyer = itemsRef.child(offerId).child("buyers").push()
                 val buyers = OfferBuyers(
-                    userRoom.user2,
+                    userNick,
                     userRoom.user2,
                     newItemRef.key
                 )

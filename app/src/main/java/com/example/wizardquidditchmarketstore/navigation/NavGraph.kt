@@ -38,7 +38,7 @@ fun NavGraph (
 
     NavHost(
         navController = navController,
-        startDestination = Screens.AddOffer.route
+        startDestination = startDestination
     ) {
         composable(route = Screens.MRoom.route + "?id={id}" + "?name={name}") { navBackStack ->
             val id: String = navBackStack.arguments?.getString("id") ?: ""
